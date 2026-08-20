@@ -1,0 +1,66 @@
+-- Database Schema Script for SuperTTT (MySQL 8.0)
+CREATE DATABASE IF NOT EXISTS supertictactoe_db;
+USE supertictactoe_db;
+
+-- USERS TABLE
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- USER_STATS TABLE
+CREATE TABLE IF NOT EXISTS user_stats (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNIQUE NOT NULL,
+    games_played INT DEFAULT 0,
+    wins INT DEFAULT 0,
+    losses INT DEFAULT 0,
+    draws INT DEFAULT 0,
+    win_rate DOUBLE DEFAULT 0.0,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- ROOMS TABLE
+CREATE TABLE IF NOT EXISTS rooms (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    room_code VARCHAR(10) NOT NULL UNIQUE,
+    status VARCHAR(20) NOT NULL,
+    creator_id VARCHAR(50) NOT NULL,
+    creator_name VARCHAR(50) NOT NULL,
+    opponent_id VARCHAR(50),
+    opponent_name VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMP NULL
+);
+
+-- GAMES TABLE
+CREATE TABLE IF NOT EXISTS games (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    room_code VARCHAR(10) NOT NULL,
+    player_x_id VARCHAR(50) NOT NULL,
+    player_x_name VARCHAR(50) NOT NULL,
+    player_o_id VARCHAR(50) NOT NULL,
+    player_o_name VARCHAR(50) NOT NULL,
+    current_player VARCHAR(1) NOT NULL DEFAULT 'X',
+    active_board INT DEFAULT -1,
+    winner VARCHAR(1),
+    status VARCHAR(20) NOT NULL DEFAULT 'PLAYING',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- MOVES TABLE
+CREATE TABLE IF NOT EXISTS moves (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    game_id BIGINT NOT NULL,
+    player_id VARCHAR(50) NOT NULL,
+    player_symbol VARCHAR(1) NOT NULL,
+    board_index INT NOT NULL,
+    cell_index INT NOT NULL,
+    move_number INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (game_id) REFERENCES games(id) ON DELETE CASCADE
+);
