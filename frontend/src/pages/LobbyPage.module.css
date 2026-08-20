@@ -1,0 +1,132 @@
+.lobbyContainer {
+  padding: 60px 20px;
+  max-width: 900px;
+}
+
+.lobbyHeader {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.lobbyHeader h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.lobbyHeader p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.playerName {
+  color: var(--accent-cyan);
+  font-weight: 700;
+}
+
+.lobbyGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 28px;
+}
+
+.lobbyCard {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--border-radius-lg);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--box-shadow-card);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.icon {
+  font-size: 2rem;
+}
+
+.cardHeader h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.lobbyCard p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+.createBtn {
+  margin-top: auto;
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+  color: #0b0e14;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px;
+  border-radius: var(--border-radius-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.createBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 242, 254, 0.35);
+}
+
+.joinForm {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.codeInput {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--border-radius-sm);
+  padding: 14px;
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  text-align: center;
+  outline: none;
+  font-weight: 700;
+}
+
+.codeInput:focus {
+  border-color: var(--accent-magenta);
+  box-shadow: 0 0 12px rgba(225, 0, 255, 0.25);
+}
+
+.joinBtn {
+  background: linear-gradient(135deg, var(--accent-purple), var(--accent-magenta));
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 14px;
+  border-radius: var(--border-radius-sm);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.joinBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(225, 0, 255, 0.35);
+}
+
+.errorMsg {
+  background: rgba(255, 82, 82, 0.15);
+  border: 1px solid var(--status-error);
+  color: var(--status-error);
+  padding: 10px;
+  border-radius: var(--border-radius-sm);
+  font-size: 0.85rem;
+  text-align: center;
+}

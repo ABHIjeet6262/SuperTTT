@@ -1,0 +1,16 @@
+.footer {
+  margin-top: auto;
+  border-top: 1px solid var(--bg-card-border);
+  background: var(--bg-secondary);
+  padding: 20px 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}

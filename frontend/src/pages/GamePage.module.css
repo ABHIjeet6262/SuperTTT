@@ -1,0 +1,67 @@
+.gamePageContainer {
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.topBar {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.backBtn {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  padding: 8px 16px;
+  border-radius: var(--border-radius-sm);
+  font-weight: 600;
+  border: 1px solid var(--bg-card-border);
+}
+
+.roomBadge {
+  background: rgba(0, 242, 254, 0.1);
+  border: 1px solid rgba(0, 242, 254, 0.3);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.codeText {
+  color: var(--accent-cyan);
+  letter-spacing: 2px;
+}
+
+.placeholderBox {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--border-radius-lg);
+  padding: 60px 40px;
+  text-align: center;
+  max-width: 600px;
+  box-shadow: var(--box-shadow-card);
+}
+
+.icon {
+  font-size: 3.5rem;
+  margin-bottom: 16px;
+}
+
+.placeholderBox h2 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.subtext {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-top: 16px;
+}
