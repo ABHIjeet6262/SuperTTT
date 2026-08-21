@@ -40,7 +40,7 @@ const GamePage = () => {
     fetchRoom();
   }, [roomCode]);
 
-  // 2. Connect WebSocket
+  // 2. Connect WebSocket & Subscribe
   useEffect(() => {
     if (!roomCode) return;
 
@@ -53,7 +53,12 @@ const GamePage = () => {
         }
 
         if (message.type === 'PLAYER_JOINED') {
-          setRoom(prev => prev ? { ...prev, status: 'PLAYING', opponentName: message.playerName } : prev);
+          setRoom(prev => prev ? { 
+            ...prev, 
+            status: 'PLAYING', 
+            opponentId: message.playerId,
+            opponentName: message.playerName 
+          } : prev);
         }
 
         if (message.type === 'REACTION_SENT') {
@@ -74,7 +79,8 @@ const GamePage = () => {
         }
       },
       () => {
-        // Connected
+        // Connected! Notify WebSocket server that player joined room page
+        websocketService.sendJoin(roomCode, playerId, playerName);
       },
       (err) => {
         setError('WebSocket Connection Error');
@@ -84,7 +90,7 @@ const GamePage = () => {
     return () => {
       websocketService.disconnect();
     };
-  }, [roomCode, playerId]);
+  }, [roomCode, playerId, playerName]);
 
   const handleCellClick = (boardIndex, cellIndex) => {
     setError('');
@@ -120,8 +126,13 @@ const GamePage = () => {
     );
   }
 
-  // WAITING STATE (Opponent hasn't joined yet)
-  if (room && room.status === 'WAITING' && !room.opponentId) {
+  // Determine if the game is active (2 players present & playing)
+  const isGameActive = 
+    (gameState && gameState.status === 'PLAYING' && gameState.playerOId && gameState.playerOId.length > 0) ||
+    (room && room.status === 'PLAYING' && room.opponentId);
+
+  // WAITING STATE (Show waiting card ONLY if opponent has not joined)
+  if (!isGameActive && room && room.status === 'WAITING' && !room.opponentId) {
     return (
       <div className={`container ${styles.centerBox}`}>
         <div className={styles.waitingCard}>

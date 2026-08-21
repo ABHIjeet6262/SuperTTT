@@ -9,15 +9,14 @@ class WebSocketService {
 
   connect(roomCode, onMessageReceived, onConnected, onError) {
     if (this.stompClient && this.stompClient.active) {
+      if (onConnected) onConnected();
       return;
     }
 
     const socket = new SockJS('http://localhost:8080/ws/game');
     this.stompClient = new Client({
       webSocketFactory: () => socket,
-      debug: (str) => {
-        // Console debug logging
-      },
+      debug: (str) => {},
       reconnectDelay: 3000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
@@ -25,13 +24,14 @@ class WebSocketService {
 
     this.stompClient.onConnect = (frame) => {
       this.connected = true;
-      if (onConnected) onConnected();
 
       // Subscribe to room topic
       this.stompClient.subscribe(`/topic/room/${roomCode}`, (message) => {
         const payload = JSON.parse(message.body);
         if (onMessageReceived) onMessageReceived(payload);
       });
+
+      if (onConnected) onConnected();
     };
 
     this.stompClient.onStompError = (frame) => {
@@ -40,6 +40,20 @@ class WebSocketService {
     };
 
     this.stompClient.activate();
+  }
+
+  sendJoin(roomCode, playerId, playerName) {
+    if (this.stompClient && this.stompClient.active) {
+      this.stompClient.publish({
+        destination: `/app/game/${roomCode}/join`,
+        body: JSON.stringify({
+          type: 'PLAYER_JOINED',
+          roomCode,
+          playerId,
+          playerName
+        })
+      });
+    }
   }
 
   sendMove(roomCode, playerId, playerName, boardIndex, cellIndex) {
