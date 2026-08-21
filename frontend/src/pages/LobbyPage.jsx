@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './LobbyPage.module.css';
 
@@ -7,12 +7,20 @@ const LobbyPage = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
-  // Get active guest or user session info
+  // Retrieve active guest or user session info
   const guestData = JSON.parse(sessionStorage.getItem('superttt_guest') || '{}');
+  const token = localStorage.getItem('superttt_token');
   const playerName = guestData.name || 'Player';
 
+  useEffect(() => {
+    // If user has not set a guest name and is not logged in, force setup
+    if (!guestData.name && !token) {
+      navigate('/guest');
+    }
+  }, [guestData.name, token, navigate]);
+
   const handleCreateRoom = () => {
-    // Generate a random 6-character room code (placeholder until backend integration in Phase 6)
+    // Generate a random 6-character room code
     const code = Math.random().toString(36).substring(2, 8).toUpperCase();
     navigate(`/game/${code}`);
   };

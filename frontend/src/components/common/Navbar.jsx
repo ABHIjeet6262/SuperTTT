@@ -5,6 +5,18 @@ import styles from './Navbar.module.css';
 const Navbar = () => {
   const navigate = useNavigate();
 
+  const handleLobbyClick = (e) => {
+    e.preventDefault();
+    const guestData = JSON.parse(sessionStorage.getItem('superttt_guest') || '{}');
+    const token = localStorage.getItem('superttt_token');
+
+    if (!guestData.name && !token) {
+      navigate('/guest');
+    } else {
+      navigate('/lobby');
+    }
+  };
+
   return (
     <header className={styles.header}>
       <div className={`container ${styles.navContainer}`}>
@@ -16,7 +28,7 @@ const Navbar = () => {
         <nav className={styles.navLinks}>
           <Link to="/" className={styles.navLink}>Home</Link>
           <Link to="/how-to-play" className={styles.navLink}>How To Play</Link>
-          <Link to="/lobby" className={styles.navLink}>Lobby</Link>
+          <a href="/lobby" onClick={handleLobbyClick} className={styles.navLink}>Lobby</a>
         </nav>
 
         <div className={styles.authButtons}>

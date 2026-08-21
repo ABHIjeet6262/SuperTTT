@@ -24,18 +24,7 @@ const HomePage = () => {
             <div className={styles.btnIcon}>⚡</div>
             <div className={styles.btnContent}>
               <h3>Play as Guest</h3>
-              <p>Jump right into a game without an account</p>
-            </div>
-          </button>
-
-          <button 
-            onClick={() => navigate('/lobby')} 
-            className={styles.cardBtn}
-          >
-            <div className={styles.btnIcon}>🏆</div>
-            <div className={styles.btnContent}>
-              <h3>Game Lobby</h3>
-              <p>Create a private room or join via code</p>
+              <p>Enter a display name and jump into the game lobby</p>
             </div>
           </button>
 
@@ -46,7 +35,7 @@ const HomePage = () => {
             <div className={styles.btnIcon}>📖</div>
             <div className={styles.btnContent}>
               <h3>How to Play</h3>
-              <p>Master the 9×9 active board rules</p>
+              <p>Master the 9×9 active board rules & strategies</p>
             </div>
           </button>
         </div>
