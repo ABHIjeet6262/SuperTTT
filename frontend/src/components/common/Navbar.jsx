@@ -1,20 +1,26 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { authService } from '../../services/authService';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const user = authService.getCurrentUser();
 
   const handleLobbyClick = (e) => {
     e.preventDefault();
     const guestData = JSON.parse(sessionStorage.getItem('superttt_guest') || '{}');
-    const token = localStorage.getItem('superttt_token');
 
-    if (!guestData.name && !token) {
+    if (!guestData.name && !user) {
       navigate('/guest');
     } else {
       navigate('/lobby');
     }
+  };
+
+  const handleLogout = () => {
+    authService.logout();
+    navigate('/login');
   };
 
   return (
@@ -30,15 +36,25 @@ const Navbar = () => {
           <Link to="/local" className={styles.navLink}>Pass & Play</Link>
           <Link to="/how-to-play" className={styles.navLink}>How To Play</Link>
           <a href="/lobby" onClick={handleLobbyClick} className={styles.navLink}>Online Lobby</a>
+          {user && <Link to="/profile" className={styles.navLink}>Profile</Link>}
+          {user && <Link to="/history" className={styles.navLink}>History</Link>}
         </nav>
 
         <div className={styles.authButtons}>
-          <button onClick={() => navigate('/guest')} className={styles.guestBtn}>
-            Play Online as Guest
-          </button>
-          <button onClick={() => navigate('/login')} className={styles.loginBtn}>
-            Login
-          </button>
+          {user ? (
+            <button onClick={handleLogout} className={styles.guestBtn}>
+              Log Out ({user.username})
+            </button>
+          ) : (
+            <>
+              <button onClick={() => navigate('/guest')} className={styles.guestBtn}>
+                Play as Guest
+              </button>
+              <button onClick={() => navigate('/login')} className={styles.loginBtn}>
+                Login
+              </button>
+            </>
+          )}
         </div>
       </div>
     </header>

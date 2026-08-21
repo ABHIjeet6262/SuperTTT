@@ -10,6 +10,8 @@ import GamePage from './pages/GamePage';
 import LocalGamePage from './pages/LocalGamePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ProfilePage from './pages/ProfilePage';
+import HistoryPage from './pages/HistoryPage';
 import './assets/styles/global.css';
 
 function App() {
@@ -26,6 +28,8 @@ function App() {
           <Route path="/game/:roomCode" element={<GamePage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/history" element={<HistoryPage />} />
         </Routes>
       </main>
       <Footer />
