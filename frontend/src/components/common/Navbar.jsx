@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../../services/authService';
 import styles from './Navbar.module.css';
@@ -6,6 +6,20 @@ import styles from './Navbar.module.css';
 const Navbar = () => {
   const navigate = useNavigate();
   const user = authService.getCurrentUser();
+
+  // Theme state: 'dark' or 'light'
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('superttt_theme') || 'dark';
+  });
+
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+    localStorage.setItem('superttt_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   const handleLobbyClick = (e) => {
     e.preventDefault();
@@ -41,6 +55,14 @@ const Navbar = () => {
         </nav>
 
         <div className={styles.authButtons}>
+          <button 
+            onClick={toggleTheme} 
+            className={styles.themeToggleBtn}
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+          >
+            {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
+          </button>
+
           {user ? (
             <button onClick={handleLogout} className={styles.guestBtn}>
               Log Out ({user.username})
