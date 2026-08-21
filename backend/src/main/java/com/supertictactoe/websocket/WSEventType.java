@@ -1,0 +1,16 @@
+package com.supertictactoe.websocket;
+
+public enum WSEventType {
+    PLAYER_JOINED,
+    GAME_STARTED,
+    MOVE_MADE,
+    BOARD_WON,
+    GAME_WON,
+    GAME_DRAW,
+    REACTION_SENT,
+    REMATCH_REQUESTED,
+    REMATCH_ACCEPTED,
+    GAME_RESTARTED,
+    PLAYER_DISCONNECTED,
+    PLAYER_RECONNECTED
+}

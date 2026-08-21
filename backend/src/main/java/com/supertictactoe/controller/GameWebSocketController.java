@@ -1,0 +1,179 @@
+package com.supertictactoe.controller;
+
+import com.supertictactoe.dto.response.GameStateDto;
+import com.supertictactoe.exception.InvalidMoveException;
+import com.supertictactoe.model.entity.Game;
+import com.supertictactoe.repository.GameRepository;
+import com.supertictactoe.service.GameEngineService;
+import com.supertictactoe.websocket.WSEventType;
+import com.supertictactoe.websocket.WSMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Controller
+public class GameWebSocketController {
+
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
+    private GameRepository gameRepository;
+
+    @Autowired
+    private GameEngineService gameEngineService;
+
+    // In-memory runtime state for active 81 cells & small board statuses per roomCode
+    private final Map<String, List<List<String>>> activeGameBoards = new ConcurrentHashMap<>();
+    private final Map<String, List<String>> activeBoardStatuses = new ConcurrentHashMap<>();
+    private final Map<String, String> rematchRequests = new ConcurrentHashMap<>();
+
+    @MessageMapping("/game/{roomCode}/join")
+    public void handleJoin(@DestinationVariable String roomCode, @Payload WSMessage message) {
+        Game game = gameRepository.findByRoomCode(roomCode).orElse(null);
+        if (game == null) return;
+
+        // Initialize in-memory boards if not present
+        activeGameBoards.putIfAbsent(roomCode, gameEngineService.createEmptyBoards());
+        activeBoardStatuses.putIfAbsent(roomCode, gameEngineService.createInitialBoardStatuses());
+
+        WSMessage broadcast = new WSMessage(WSEventType.PLAYER_JOINED, roomCode, message.getPlayerId(), message.getPlayerName());
+        broadcast.setGameState(buildGameStateDto(game, activeGameBoards.get(roomCode), activeBoardStatuses.get(roomCode)));
+        
+        messagingTemplate.convertAndSend("/topic/room/" + roomCode, broadcast);
+    }
+
+    @MessageMapping("/game/{roomCode}/move")
+    @Transactional
+    public void handleMove(@DestinationVariable String roomCode, @Payload WSMessage message) {
+        Game game = gameRepository.findByRoomCode(roomCode)
+                .orElseThrow(() -> new InvalidMoveException("Game not found for room: " + roomCode));
+
+        List<List<String>> boards = activeGameBoards.computeIfAbsent(roomCode, k -> gameEngineService.createEmptyBoards());
+        List<String> boardStatuses = activeBoardStatuses.computeIfAbsent(roomCode, k -> gameEngineService.createInitialBoardStatuses());
+
+        int boardIndex = message.getBoardIndex();
+        int cellIndex = message.getCellIndex();
+
+        // 1. Authoritative Server Validation
+        gameEngineService.validateMove(game, boardIndex, cellIndex, message.getPlayerId(), boards, boardStatuses);
+
+        // 2. Apply Move
+        String symbol = game.getCurrentPlayer();
+        boards.get(boardIndex).set(cellIndex, symbol);
+
+        // 3. Evaluate Small Board Winner
+        String boardResult = gameEngineService.checkBoardWinner(boards.get(boardIndex));
+        boardStatuses.set(boardIndex, boardResult);
+
+        // 4. Evaluate Overall Victory
+        String overallWinner = gameEngineService.checkOverallWinner(boardStatuses);
+        if (overallWinner != null) {
+            game.setWinner(overallWinner);
+            game.setStatus("FINISHED");
+        }
+
+        // 5. Determine Next Active Board (Wildcard Rule if target board finished)
+        int targetNextBoard = cellIndex;
+        if ("IN_PROGRESS".equals(boardStatuses.get(targetNextBoard))) {
+            game.setActiveBoard(targetNextBoard);
+        } else {
+            game.setActiveBoard(-1); // Wildcard: Any board
+        }
+
+        // 6. Switch Turn
+        game.setCurrentPlayer("X".equals(symbol) ? "O" : "X");
+        gameRepository.save(game);
+
+        // 7. Broadcast updated state to both clients
+        WSEventType eventType = WSEventType.MOVE_MADE;
+        if (overallWinner != null) {
+            eventType = "DRAW".equals(overallWinner) ? WSEventType.GAME_DRAW : WSEventType.GAME_WON;
+        }
+
+        WSMessage broadcast = new WSMessage(eventType, roomCode, message.getPlayerId(), message.getPlayerName());
+        broadcast.setBoardIndex(boardIndex);
+        broadcast.setCellIndex(cellIndex);
+        broadcast.setGameState(buildGameStateDto(game, boards, boardStatuses));
+
+        messagingTemplate.convertAndSend("/topic/room/" + roomCode, broadcast);
+    }
+
+    @MessageMapping("/game/{roomCode}/reaction")
+    public void handleReaction(@DestinationVariable String roomCode, @Payload WSMessage message) {
+        WSMessage broadcast = new WSMessage(WSEventType.REACTION_SENT, roomCode, message.getPlayerId(), message.getPlayerName());
+        broadcast.setReaction(message.getReaction());
+        
+        messagingTemplate.convertAndSend("/topic/room/" + roomCode, broadcast);
+    }
+
+    @MessageMapping("/game/{roomCode}/rematch")
+    @Transactional
+    public void handleRematch(@DestinationVariable String roomCode, @Payload WSMessage message) {
+        String existingRequestPlayer = rematchRequests.get(roomCode);
+
+        if (existingRequestPlayer == null) {
+            // First player requested rematch
+            rematchRequests.put(roomCode, message.getPlayerId());
+            WSMessage broadcast = new WSMessage(WSEventType.REMATCH_REQUESTED, roomCode, message.getPlayerId(), message.getPlayerName());
+            messagingTemplate.convertAndSend("/topic/room/" + roomCode, broadcast);
+        } else if (!existingRequestPlayer.equals(message.getPlayerId())) {
+            // Both players accepted rematch! Reset state & Swap X/O symbols
+            rematchRequests.remove(roomCode);
+
+            Game game = gameRepository.findByRoomCode(roomCode).orElse(null);
+            if (game != null) {
+                // Swap X and O symbols as specified in requirement #25
+                String oldXId = game.getPlayerXId();
+                String oldXName = game.getPlayerXName();
+
+                game.setPlayerXId(game.getPlayerOId());
+                game.setPlayerXName(game.getPlayerOName());
+                game.setPlayerOId(oldXId);
+                game.setPlayerOName(oldXName);
+
+                game.setCurrentPlayer("X");
+                game.setActiveBoard(-1);
+                game.setWinner(null);
+                game.setStatus("PLAYING");
+
+                gameRepository.save(game);
+            }
+
+            activeGameBoards.put(roomCode, gameEngineService.createEmptyBoards());
+            activeBoardStatuses.put(roomCode, gameEngineService.createInitialBoardStatuses());
+
+            WSMessage broadcast = new WSMessage(WSEventType.GAME_RESTARTED, roomCode, message.getPlayerId(), message.getPlayerName());
+            broadcast.setGameState(buildGameStateDto(game, activeGameBoards.get(roomCode), activeBoardStatuses.get(roomCode)));
+            
+            messagingTemplate.convertAndSend("/topic/room/" + roomCode, broadcast);
+        }
+    }
+
+    private GameStateDto buildGameStateDto(Game game, List<List<String>> boards, List<String> boardStatuses) {
+        GameStateDto dto = new GameStateDto();
+        dto.setGameId(game.getId());
+        dto.setRoomCode(game.getRoomCode());
+        dto.setPlayerXId(game.getPlayerXId());
+        dto.setPlayerXName(game.getPlayerXName());
+        dto.setPlayerOId(game.getPlayerOId());
+        dto.setPlayerOName(game.getPlayerOName());
+        dto.setCurrentPlayer(game.getCurrentPlayer());
+        dto.setActiveBoard(game.getActiveBoard());
+        dto.setWinner(game.getWinner());
+        dto.setStatus(game.getStatus());
+        dto.setBoards(boards);
+        dto.setBoardStatuses(boardStatuses);
+        return dto;
+    }
+}
