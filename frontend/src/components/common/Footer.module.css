@@ -1,12 +1,12 @@
 .footer {
-  margin-top: auto;
+  margin-top: 60px;
   border-top: 1px solid var(--bg-card-border);
   background: var(--bg-secondary);
   padding: 24px 0;
   font-size: 0.85rem;
   color: var(--text-muted);
   position: relative;
-  z-index: 50;
+  width: 100%;
 }
 
 .footerContainer {

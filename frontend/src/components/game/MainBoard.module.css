@@ -1,21 +1,21 @@
 .mainBoard {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  max-width: 580px;
+  gap: 10px;
+  max-width: 500px;
   width: 100%;
   aspect-ratio: 1;
   margin: 0 auto;
-  padding: 12px;
+  padding: 10px;
   background: var(--bg-secondary);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-lg);
   box-shadow: var(--box-shadow-card);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 540px) {
   .mainBoard {
-    gap: 8px;
-    padding: 8px;
+    gap: 6px;
+    padding: 6px;
   }
 }

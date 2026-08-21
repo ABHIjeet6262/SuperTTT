@@ -98,7 +98,7 @@
 
 .headerBar {
   width: 100%;
-  max-width: 580px;
+  max-width: 500px;
   display: flex;
   justify-content: space-between;
   align-items: center;
