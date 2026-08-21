@@ -177,6 +177,8 @@ const GamePage = () => {
         lastMove={gameState.lastMove}
       />
 
+      <ReactionPicker onSendReaction={handleSendReaction} />
+
       {activeReaction && (
         <div className={styles.reactionBanner}>
           {activeReaction.player} sent {activeReaction.reaction}
@@ -191,8 +193,6 @@ const GamePage = () => {
         gameState={gameState}
         onCellClick={handleCellClick}
       />
-
-      <ReactionPicker onSendReaction={handleSendReaction} />
 
       {gameState.status === 'FINISHED' && (
         <GameResultOverlay

@@ -1,12 +1,16 @@
 .container {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   background: var(--bg-card);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-md);
   padding: 8px 16px;
-  margin-top: 16px;
+  margin: 12px 0 16px 0;
+  position: relative;
+  z-index: 30;
+  box-shadow: var(--box-shadow-card);
 }
 
 .label {
@@ -21,15 +25,17 @@
 }
 
 .reactionBtn {
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-sm);
-  padding: 6px 12px;
+  padding: 6px 14px;
   font-size: 1.1rem;
   transition: all 0.2s ease;
+  color: var(--text-primary);
 }
 
 .reactionBtn:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.18);
   transform: translateY(-2px);
+  border-color: var(--accent-cyan);
 }
