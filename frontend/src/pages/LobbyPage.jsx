@@ -1,50 +1,73 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { roomService } from '../services/roomService';
+import { authService } from '../services/authService';
 import styles from './LobbyPage.module.css';
 
 const LobbyPage = () => {
   const [roomCodeInput, setRoomCodeInput] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Retrieve active guest or user session info
+  // Retrieve active user or guest session info
+  const user = authService.getCurrentUser();
   const guestData = JSON.parse(sessionStorage.getItem('superttt_guest') || '{}');
-  const token = localStorage.getItem('superttt_token');
-  const playerName = guestData.name || 'Player';
+  
+  const playerId = user ? `user_${user.username}` : (guestData.id || 'guest_anon');
+  const playerName = user ? user.username : (guestData.name || 'Player');
 
   useEffect(() => {
-    // If user has not set a guest name and is not logged in, force setup
-    if (!guestData.name && !token) {
+    if (!user && !guestData.name) {
       navigate('/guest');
     }
-  }, [guestData.name, token, navigate]);
+  }, [user, guestData.name, navigate]);
 
-  const handleCreateRoom = () => {
-    // Generate a random 6-character room code
-    const code = Math.random().toString(36).substring(2, 8).toUpperCase();
-    navigate(`/game/${code}`);
+  const handleCreateRoom = async () => {
+    setError('');
+    setLoading(true);
+    try {
+      const room = await roomService.createRoom(playerId, playerName);
+      navigate(`/game/${room.roomCode}`);
+    } catch (err) {
+      const errMsg = err.response?.data?.error || err.response?.data?.message || 'Failed to create room.';
+      setError(errMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleJoinRoom = (e) => {
+  const handleJoinRoom = async (e) => {
     e.preventDefault();
+    setError('');
+
     const cleanCode = roomCodeInput.trim().toUpperCase();
-    if (!cleanCode) {
-      setError('Please enter a 6-character room code.');
+    if (!cleanCode || cleanCode.length !== 6) {
+      setError('Please enter a valid 6-character room code.');
       return;
     }
-    if (cleanCode.length !== 6) {
-      setError('Room codes must be exactly 6 characters.');
-      return;
+
+    setLoading(true);
+
+    try {
+      await roomService.joinRoom(cleanCode, playerId, playerName);
+      navigate(`/game/${cleanCode}`);
+    } catch (err) {
+      const errMsg = err.response?.data?.error || err.response?.data?.message || 'Failed to join room.';
+      setError(errMsg);
+    } finally {
+      setLoading(false);
     }
-    navigate(`/game/${cleanCode}`);
   };
 
   return (
     <div className={`container ${styles.lobbyContainer}`}>
       <header className={styles.lobbyHeader}>
-        <h1>Game Lobby</h1>
-        <p>Welcome, <span className={styles.playerName}>{playerName}</span>! Choose how you want to play.</p>
+        <h1>Online Game Lobby</h1>
+        <p>Welcome, <span className={styles.playerName}>{playerName}</span>! Choose how you want to play online.</p>
       </header>
+
+      {error && <div className={styles.errorMsg} style={{ marginBottom: '24px' }}>{error}</div>}
 
       <div className={styles.lobbyGrid}>
         {/* Create Room Card */}
@@ -54,8 +77,8 @@ const LobbyPage = () => {
             <h2>Create Private Room</h2>
           </div>
           <p>Generate a unique room code and share it with your friend to play online.</p>
-          <button onClick={handleCreateRoom} className={styles.createBtn}>
-            + Create New Room
+          <button onClick={handleCreateRoom} className={styles.createBtn} disabled={loading}>
+            {loading ? 'Creating...' : '+ Create New Room'}
           </button>
         </div>
 
@@ -68,7 +91,6 @@ const LobbyPage = () => {
           <p>Enter the 6-character room code shared by your friend to join their game.</p>
           
           <form onSubmit={handleJoinRoom} className={styles.joinForm}>
-            {error && <div className={styles.errorMsg}>{error}</div>}
             <input
               type="text"
               placeholder="e.g. X7K9P2"
@@ -80,8 +102,8 @@ const LobbyPage = () => {
               }}
               className={styles.codeInput}
             />
-            <button type="submit" className={styles.joinBtn}>
-              Join Game
+            <button type="submit" className={styles.joinBtn} disabled={loading}>
+              {loading ? 'Joining...' : 'Join Game'}
             </button>
           </form>
         </div>
