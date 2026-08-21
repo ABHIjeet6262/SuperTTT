@@ -27,13 +27,14 @@ const Navbar = () => {
 
         <nav className={styles.navLinks}>
           <Link to="/" className={styles.navLink}>Home</Link>
+          <Link to="/local" className={styles.navLink}>Pass & Play</Link>
           <Link to="/how-to-play" className={styles.navLink}>How To Play</Link>
-          <a href="/lobby" onClick={handleLobbyClick} className={styles.navLink}>Lobby</a>
+          <a href="/lobby" onClick={handleLobbyClick} className={styles.navLink}>Online Lobby</a>
         </nav>
 
         <div className={styles.authButtons}>
           <button onClick={() => navigate('/guest')} className={styles.guestBtn}>
-            Play as Guest
+            Play Online as Guest
           </button>
           <button onClick={() => navigate('/login')} className={styles.loginBtn}>
             Login

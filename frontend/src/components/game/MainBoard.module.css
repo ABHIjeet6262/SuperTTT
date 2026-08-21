@@ -1,0 +1,21 @@
+.mainBoard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  max-width: 580px;
+  width: 100%;
+  aspect-ratio: 1;
+  margin: 0 auto;
+  padding: 12px;
+  background: rgba(11, 14, 20, 0.9);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--box-shadow-card);
+}
+
+@media (max-width: 600px) {
+  .mainBoard {
+    gap: 8px;
+    padding: 8px;
+  }
+}

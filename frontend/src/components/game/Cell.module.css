@@ -1,0 +1,34 @@
+.cell {
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.cell:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+}
+
+.x {
+  color: var(--player-x-color);
+  text-shadow: 0 0 8px var(--player-x-glow);
+}
+
+.o {
+  color: var(--player-o-color);
+  text-shadow: 0 0 8px var(--player-o-glow);
+}
+
+.lastMove {
+  background: rgba(0, 242, 254, 0.2) !important;
+  box-shadow: inset 0 0 8px var(--accent-cyan);
+}

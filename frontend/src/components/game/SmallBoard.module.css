@@ -1,0 +1,85 @@
+.smallBoard {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-backdrop);
+  border: 2px solid var(--bg-card-border);
+  border-radius: var(--border-radius-md);
+  padding: 8px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.25s ease;
+}
+
+.boardHeader {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  flex: 1;
+}
+
+.activeBoard {
+  border-color: var(--active-board-border);
+  box-shadow: 0 0 16px var(--active-board-glow);
+  animation: activeGlow 2s infinite alternate;
+}
+
+.activeBoard .boardHeader {
+  color: var(--active-board-border);
+}
+
+@keyframes activeGlow {
+  0% { box-shadow: 0 0 10px rgba(0, 255, 204, 0.2); }
+  100% { box-shadow: 0 0 20px rgba(0, 255, 204, 0.5); }
+}
+
+.completedBoard {
+  opacity: 0.85;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  font-weight: 900;
+  border-radius: var(--border-radius-md);
+  backdrop-filter: blur(4px);
+  z-index: 10;
+  animation: popIn 0.3s ease;
+}
+
+.overlayX {
+  color: var(--player-x-color);
+  background: rgba(0, 229, 255, 0.25);
+  text-shadow: 0 0 16px var(--player-x-glow);
+}
+
+.overlayO {
+  color: var(--player-o-color);
+  background: rgba(255, 42, 109, 0.25);
+  text-shadow: 0 0 16px var(--player-o-glow);
+}
+
+.overlayDraw {
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.7);
+  font-size: 1.5rem;
+  letter-spacing: 2px;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
