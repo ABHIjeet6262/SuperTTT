@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { authService } from '../services/authService';
 import styles from './LoginPage.module.css';
 
 const LoginPage = () => {
   const [usernameOrEmail, setUsernameOrEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // Authentication placeholder (Phase 3 will connect JWT backend API)
-    alert('Login endpoint will be connected in Phase 3 Authentication!');
+    setError('');
+    setLoading(true);
+
+    try {
+      await authService.login(usernameOrEmail, password);
+      navigate('/lobby');
+    } catch (err) {
+      const errMsg = err.response?.data?.error || err.response?.data?.message || 'Failed to login. Please check your credentials.';
+      setError(errMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -18,6 +31,8 @@ const LoginPage = () => {
       <div className={styles.authCard}>
         <h2>Sign In to SuperTTT</h2>
         <p>Access your persistent statistics and match history</p>
+
+        {error && <div className={styles.errorMsg}>{error}</div>}
 
         <form onSubmit={handleLogin} className={styles.form}>
           <div className={styles.field}>
@@ -42,8 +57,8 @@ const LoginPage = () => {
             />
           </div>
 
-          <button type="submit" className={styles.submitBtn}>
-            Sign In
+          <button type="submit" className={styles.submitBtn} disabled={loading}>
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 

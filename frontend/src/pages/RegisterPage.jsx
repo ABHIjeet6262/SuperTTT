@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { authService } from '../services/authService';
 import styles from './LoginPage.module.css';
 
 const RegisterPage = () => {
@@ -7,10 +8,30 @@ const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    alert('Registration endpoint will be connected in Phase 3 Authentication!');
+    setError('');
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      await authService.register(username, email, password);
+      navigate('/lobby');
+    } catch (err) {
+      const errMsg = err.response?.data?.error || err.response?.data?.message || 'Registration failed. Please try again.';
+      setError(errMsg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -18,6 +39,8 @@ const RegisterPage = () => {
       <div className={styles.authCard}>
         <h2>Create Account</h2>
         <p>Join SuperTTT to track stats & climb the leaderboard</p>
+
+        {error && <div className={styles.errorMsg}>{error}</div>}
 
         <form onSubmit={handleRegister} className={styles.form}>
           <div className={styles.field}>
@@ -64,8 +87,8 @@ const RegisterPage = () => {
             />
           </div>
 
-          <button type="submit" className={styles.submitBtn}>
-            Create Account
+          <button type="submit" className={styles.submitBtn} disabled={loading}>
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
