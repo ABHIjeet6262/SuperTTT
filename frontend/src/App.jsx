@@ -8,6 +8,7 @@ import GuestSetupPage from './pages/GuestSetupPage';
 import LobbyPage from './pages/LobbyPage';
 import GamePage from './pages/GamePage';
 import LocalGamePage from './pages/LocalGamePage';
+import AiGamePage from './pages/AiGamePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
@@ -22,6 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/local" element={<LocalGamePage />} />
+          <Route path="/ai" element={<AiGamePage />} />
           <Route path="/how-to-play" element={<HowToPlayPage />} />
           <Route path="/guest" element={<GuestSetupPage />} />
           <Route path="/lobby" element={<LobbyPage />} />

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { authService } from '../../services/authService';
+import { soundService } from '../../services/soundService';
 import styles from './Navbar.module.css';
 
 const Navbar = () => {
@@ -12,6 +13,9 @@ const Navbar = () => {
     return localStorage.getItem('superttt_theme') || 'dark';
   });
 
+  // Mute state
+  const [isMuted, setIsMuted] = useState(() => soundService.isMuted());
+
   useEffect(() => {
     document.body.setAttribute('data-theme', theme);
     localStorage.setItem('superttt_theme', theme);
@@ -19,6 +23,14 @@ const Navbar = () => {
 
   const toggleTheme = () => {
     setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
+  };
+
+  const toggleAudio = () => {
+    const newMuted = soundService.toggleMute();
+    setIsMuted(newMuted);
+    if (!newMuted) {
+      soundService.playMove();
+    }
   };
 
   const handleLobbyClick = (e) => {
@@ -48,6 +60,7 @@ const Navbar = () => {
         <nav className={styles.navLinks}>
           <Link to="/" className={styles.navLink}>Home</Link>
           <Link to="/local" className={styles.navLink}>Pass & Play</Link>
+          <Link to="/ai" className={styles.navLink}>vs AI Bot</Link>
           <Link to="/how-to-play" className={styles.navLink}>How To Play</Link>
           <a href="/lobby" onClick={handleLobbyClick} className={styles.navLink}>Online Lobby</a>
           {user && <Link to="/profile" className={styles.navLink}>Profile</Link>}
@@ -55,6 +68,14 @@ const Navbar = () => {
         </nav>
 
         <div className={styles.authButtons}>
+          <button 
+            onClick={toggleAudio}
+            className={styles.themeToggleBtn}
+            title={isMuted ? 'Unmute Game Sounds' : 'Mute Game Sounds'}
+          >
+            {isMuted ? '🔇 Muted' : '🔊 Sound'}
+          </button>
+
           <button 
             onClick={toggleTheme} 
             className={styles.themeToggleBtn}

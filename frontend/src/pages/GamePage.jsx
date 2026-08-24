@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import MainBoard from '../components/game/MainBoard';
 import TurnIndicator from '../components/game/TurnIndicator';
@@ -7,6 +7,7 @@ import ReactionPicker from '../components/game/ReactionPicker';
 import websocketService from '../services/websocketService';
 import { roomService } from '../services/roomService';
 import { authService } from '../services/authService';
+import { soundService } from '../services/soundService';
 import { createInitialGameState } from '../utils/superTicTacToeEngine';
 import styles from './GamePage.module.css';
 
@@ -26,6 +27,8 @@ const GamePage = () => {
   const [error, setError] = useState('');
   const [activeReaction, setActiveReaction] = useState(null);
   const [rematchStatus, setRematchStatus] = useState('');
+
+  const prevGameStateRef = useRef(gameState);
 
   // 1. Fetch Room details on mount
   useEffect(() => {
@@ -49,7 +52,23 @@ const GamePage = () => {
       (message) => {
         // Handle incoming WebSocket messages
         if (message.gameState) {
-          setGameState(message.gameState);
+          const prev = prevGameStateRef.current;
+          const next = message.gameState;
+
+          if (next.status === 'FINISHED' && prev.status !== 'FINISHED') {
+            soundService.playGameWin();
+          } else if (next.lastMove && (!prev.lastMove || prev.lastMove.cellIndex !== next.lastMove.cellIndex || prev.lastMove.boardIndex !== next.lastMove.boardIndex)) {
+            const prevWonCount = prev.boardStatuses.filter(s => s.startsWith('WON')).length;
+            const nextWonCount = next.boardStatuses.filter(s => s.startsWith('WON')).length;
+            if (nextWonCount > prevWonCount) {
+              soundService.playBoardWin();
+            } else {
+              soundService.playMove();
+            }
+          }
+
+          prevGameStateRef.current = next;
+          setGameState(next);
         }
 
         if (message.type === 'PLAYER_JOINED') {
@@ -62,6 +81,7 @@ const GamePage = () => {
         }
 
         if (message.type === 'REACTION_SENT') {
+          soundService.playReaction();
           setActiveReaction({ player: message.playerName, reaction: message.reaction });
           setTimeout(() => setActiveReaction(null), 3000);
         }

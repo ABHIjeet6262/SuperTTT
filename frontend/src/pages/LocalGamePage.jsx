@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import MainBoard from '../components/game/MainBoard';
 import TurnIndicator from '../components/game/TurnIndicator';
 import GameResultOverlay from '../components/game/GameResultOverlay';
 import { createInitialGameState, processMove } from '../utils/superTicTacToeEngine';
+import { soundService } from '../services/soundService';
 import styles from './LocalGamePage.module.css';
 
 const LocalGamePage = () => {
@@ -11,6 +12,25 @@ const LocalGamePage = () => {
   const [isSetupDone, setIsSetupDone] = useState(false);
   const [gameState, setGameState] = useState(createInitialGameState());
   const [errorMessage, setErrorMessage] = useState('');
+
+  // Audio effects based on game state progression
+  const prevGameStateRef = useRef(gameState);
+
+  useEffect(() => {
+    const prev = prevGameStateRef.current;
+    if (gameState.status === 'FINISHED' && prev.status !== 'FINISHED') {
+      soundService.playGameWin();
+    } else if (gameState.lastMove && (!prev.lastMove || prev.lastMove.cellIndex !== gameState.lastMove.cellIndex || prev.lastMove.boardIndex !== gameState.lastMove.boardIndex)) {
+      const prevWonCount = prev.boardStatuses.filter(s => s.startsWith('WON')).length;
+      const currentWonCount = gameState.boardStatuses.filter(s => s.startsWith('WON')).length;
+      if (currentWonCount > prevWonCount) {
+        soundService.playBoardWin();
+      } else {
+        soundService.playMove();
+      }
+    }
+    prevGameStateRef.current = gameState;
+  }, [gameState]);
 
   const handleCellClick = (boardIndex, cellIndex) => {
     setErrorMessage('');
@@ -29,7 +49,6 @@ const LocalGamePage = () => {
   };
 
   const handleRematchSwap = () => {
-    // Swap Player X and Player O names on rematch as specified in requirement #25
     setPlayerXName(playerOName);
     setPlayerOName(playerXName);
     setGameState(createInitialGameState());

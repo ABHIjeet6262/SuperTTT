@@ -8,7 +8,7 @@ const HomePage = () => {
   return (
     <div className={styles.homeContainer}>
       <div className={styles.heroSection}>
-        <div className={styles.badge}>🎮 Real-Time & Pass-and-Play Multiplayer</div>
+        <div className={styles.badge}>🎮 Real-Time, AI Bot & Pass-and-Play Multiplayer</div>
         <h1 className={styles.title}>
           SUPER <span className={styles.gradientText}>TIC-TAC-TOE</span>
         </h1>
@@ -24,24 +24,36 @@ const HomePage = () => {
           >
             <div className={styles.btnIcon}>📱</div>
             <div className={styles.btnContent}>
-              <h3>Pass & Play (Same Device)</h3>
-              <p>Two players take turns on one phone or computer screen</p>
+              <h3>Pass & Play</h3>
+              <p>Two players take turns on one device</p>
             </div>
           </button>
 
-          {/* Option 2: Online Multiplayer (Separate Devices) */}
+          {/* Option 2: Single Player vs AI Bot */}
+          <button 
+            onClick={() => navigate('/ai')} 
+            className={`${styles.cardBtn} ${styles.primaryBtn}`}
+          >
+            <div className={styles.btnIcon}>🤖</div>
+            <div className={styles.btnContent}>
+              <h3>Play vs AI Bot</h3>
+              <p>Practice solo against Casual or Tactical AI</p>
+            </div>
+          </button>
+
+          {/* Option 3: Online Multiplayer */}
           <button 
             onClick={() => navigate('/guest')} 
             className={styles.cardBtn}
           >
             <div className={styles.btnIcon}>🌐</div>
             <div className={styles.btnContent}>
-              <h3>Play Online (Separate Devices)</h3>
-              <p>Create a room code and invite an online opponent</p>
+              <h3>Play Online</h3>
+              <p>Create a room code and invite a friend</p>
             </div>
           </button>
 
-          {/* Option 3: How to Play */}
+          {/* Option 4: How to Play */}
           <button 
             onClick={() => navigate('/how-to-play')} 
             className={styles.cardBtn}
@@ -49,7 +61,7 @@ const HomePage = () => {
             <div className={styles.btnIcon}>📖</div>
             <div className={styles.btnContent}>
               <h3>How to Play</h3>
-              <p>Master the 9×9 active board rules & wildcard tactics</p>
+              <p>Master the active board rules & tactics</p>
             </div>
           </button>
         </div>
