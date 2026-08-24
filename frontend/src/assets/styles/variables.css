@@ -1,4 +1,4 @@
-/* Gaming & Clean Modern Theme Variables */
+/* Gaming Theme Variables with Full Light & Dark Support */
 :root {
   /* Default Dark Mode */
   --bg-primary: #0b0e14;
@@ -6,6 +6,11 @@
   --bg-card: rgba(22, 28, 42, 0.75);
   --bg-card-border: rgba(255, 255, 255, 0.1);
   --bg-card-hover: rgba(30, 39, 58, 0.85);
+  --navbar-bg: rgba(11, 14, 20, 0.85);
+  --bg-guidance: rgba(20, 25, 35, 0.85);
+  --btn-secondary-bg: rgba(255, 255, 255, 0.08);
+  --btn-secondary-border: rgba(255, 255, 255, 0.12);
+  --vs-badge-bg: rgba(255, 255, 255, 0.05);
 
   /* Primary Accent Colors */
   --accent-cyan: #00f2fe;
@@ -53,9 +58,14 @@
 [data-theme='light'] {
   --bg-primary: #f8fafc;
   --bg-secondary: #ffffff;
-  --bg-card: rgba(255, 255, 255, 0.85);
-  --bg-card-border: rgba(203, 213, 225, 0.8);
-  --bg-card-hover: rgba(241, 245, 249, 0.95);
+  --bg-card: #ffffff;
+  --bg-card-border: #e2e8f0;
+  --bg-card-hover: #f1f5f9;
+  --navbar-bg: rgba(255, 255, 255, 0.92);
+  --bg-guidance: #ffffff;
+  --btn-secondary-bg: #f1f5f9;
+  --btn-secondary-border: #cbd5e1;
+  --vs-badge-bg: #f1f5f9;
 
   --accent-cyan: #0284c7;
   --accent-blue: #2563eb;
@@ -63,20 +73,20 @@
   --accent-magenta: #d946ef;
 
   --player-x-color: #0284c7;
-  --player-x-glow: rgba(2, 132, 199, 0.25);
+  --player-x-glow: rgba(2, 132, 199, 0.2);
   --player-o-color: #e11d48;
-  --player-o-glow: rgba(225, 29, 72, 0.25);
+  --player-o-glow: rgba(225, 29, 72, 0.2);
 
   --active-board-border: #0d9488;
-  --active-board-glow: rgba(13, 148, 136, 0.25);
+  --active-board-glow: rgba(13, 148, 136, 0.2);
 
   --text-primary: #0f172a;
   --text-secondary: #475569;
-  --text-muted: #64748b;
+  --text-muted: #94a3b8;
 
   --status-success: #16a34a;
   --status-warning: #d97706;
   --status-error: #dc2626;
 
-  --box-shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --box-shadow-card: 0 8px 24px 0 rgba(0, 0, 0, 0.06);
 }

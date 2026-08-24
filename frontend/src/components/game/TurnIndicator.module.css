@@ -18,6 +18,7 @@
   flex: 1;
   background: var(--bg-card);
   backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-md);
   padding: 10px 16px;
@@ -25,6 +26,7 @@
   align-items: center;
   gap: 12px;
   transition: all 0.25s ease;
+  box-shadow: var(--box-shadow-card);
 }
 
 .symbolX {
@@ -52,9 +54,10 @@
   font-weight: 900;
   font-size: 0.85rem;
   color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--vs-badge-bg);
   padding: 6px 12px;
   border-radius: 20px;
+  border: 1px solid var(--bg-card-border);
 }
 
 .activePlayerX {
@@ -68,7 +71,7 @@
 }
 
 .guidanceBox {
-  background: rgba(20, 25, 35, 0.8);
+  background: var(--bg-guidance);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-sm);
   padding: 10px 16px;
@@ -77,6 +80,7 @@
   flex-direction: column;
   gap: 4px;
   font-size: 0.9rem;
+  box-shadow: var(--box-shadow-card);
 }
 
 .turnText {
