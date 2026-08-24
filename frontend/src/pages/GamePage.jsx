@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { QRCodeSVG } from 'qrcode.react';
 import MainBoard from '../components/game/MainBoard';
 import TurnIndicator from '../components/game/TurnIndicator';
 import GameResultOverlay from '../components/game/GameResultOverlay';
@@ -16,19 +17,24 @@ const GamePage = () => {
   const navigate = useNavigate();
 
   const user = authService.getCurrentUser();
-  const guestData = JSON.parse(sessionStorage.getItem('superttt_guest') || '{}');
-  
-  const playerId = user ? `user_${user.username}` : (guestData.id || 'guest_anon');
-  const playerName = user ? user.username : (guestData.name || 'Player');
+  const [guestData, setGuestData] = useState(() => {
+    return JSON.parse(sessionStorage.getItem('superttt_guest') || '{}');
+  });
 
+  const [promptGuestName, setPromptGuestName] = useState('');
   const [room, setRoom] = useState(null);
   const [gameState, setGameState] = useState(createInitialGameState());
-  const [copied, setCopied] = useState(false);
+  const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
   const [error, setError] = useState('');
   const [activeReaction, setActiveReaction] = useState(null);
   const [rematchStatus, setRematchStatus] = useState('');
 
+  const playerId = user ? `user_${user.username}` : (guestData.id || '');
+  const playerName = user ? user.username : (guestData.name || '');
+
   const prevGameStateRef = useRef(gameState);
+  const shareUrl = `${window.location.origin}/game/${roomCode}`;
 
   // 1. Fetch Room details on mount
   useEffect(() => {
@@ -45,12 +51,11 @@ const GamePage = () => {
 
   // 2. Connect WebSocket & Subscribe
   useEffect(() => {
-    if (!roomCode) return;
+    if (!roomCode || !playerId || !playerName) return;
 
     websocketService.connect(
       roomCode,
       (message) => {
-        // Handle incoming WebSocket messages
         if (message.gameState) {
           const prev = prevGameStateRef.current;
           const next = message.gameState;
@@ -99,7 +104,6 @@ const GamePage = () => {
         }
       },
       () => {
-        // Connected! Notify WebSocket server that player joined room page
         websocketService.sendJoin(roomCode, playerId, playerName);
       },
       (err) => {
@@ -112,9 +116,25 @@ const GamePage = () => {
     };
   }, [roomCode, playerId, playerName]);
 
+  // Handle direct link/QR join where player needs a display name
+  const handleJoinViaDirectLink = async (e) => {
+    e.preventDefault();
+    if (!promptGuestName.trim()) return;
+
+    const newGuestId = 'guest_' + Math.random().toString(36).substring(2, 9);
+    const guestObj = { id: newGuestId, name: promptGuestName.trim(), isGuest: true };
+    sessionStorage.setItem('superttt_guest', JSON.stringify(guestObj));
+    setGuestData(guestObj);
+
+    try {
+      await roomService.joinRoom(roomCode, newGuestId, promptGuestName.trim());
+    } catch (err) {
+      // Room might already have opponent or be in playing state
+    }
+  };
+
   const handleCellClick = (boardIndex, cellIndex) => {
     setError('');
-    // Send move to backend via WebSocket
     websocketService.sendMove(roomCode, playerId, playerName, boardIndex, cellIndex);
   };
 
@@ -128,8 +148,14 @@ const GamePage = () => {
 
   const handleCopyCode = () => {
     navigator.clipboard.writeText(roomCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedCode(true);
+    setTimeout(() => setCopiedCode(false), 2000);
+  };
+
+  const handleCopyLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
   };
 
   if (error) {
@@ -146,30 +172,80 @@ const GamePage = () => {
     );
   }
 
+  // If user scanned QR code or joined via direct link without a name, prompt them
+  if (!user && !guestData.name) {
+    return (
+      <div className={`container ${styles.centerBox}`}>
+        <div className={styles.waitingCard}>
+          <div className={styles.badge}>Join Game Room</div>
+          <h2>Enter Room {roomCode}</h2>
+          <p>Choose a display name to enter the match:</p>
+
+          <form onSubmit={handleJoinViaDirectLink} className={styles.directJoinForm}>
+            <input
+              type="text"
+              placeholder="Your Name (e.g. Alex)"
+              value={promptGuestName}
+              onChange={(e) => setPromptGuestName(e.target.value)}
+              maxLength={20}
+              required
+              autoFocus
+              className={styles.nameInput}
+            />
+            <button type="submit" className={styles.primaryJoinBtn}>
+              🎮 Join Match Now
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
   // Determine if the game is active (2 players present & playing)
   const isGameActive = 
     (gameState && gameState.status === 'PLAYING' && gameState.playerOId && gameState.playerOId.length > 0) ||
     (room && room.status === 'PLAYING' && room.opponentId);
 
-  // WAITING STATE (Show waiting card ONLY if opponent has not joined)
+  // WAITING STATE (Show waiting card with Code & QR Code)
   if (!isGameActive && room && room.status === 'WAITING' && !room.opponentId) {
     return (
       <div className={`container ${styles.centerBox}`}>
         <div className={styles.waitingCard}>
           <div className={styles.badge}>ROOM CREATED</div>
           <h2>Your Room is Ready!</h2>
-          <p>Share this 6-character room code with your opponent:</p>
+          <p>Share this code or scan the QR code to join:</p>
 
+          {/* 6-Digit Code Section */}
           <div className={styles.codeBox}>
             <span className={styles.codeText}>{roomCode}</span>
             <button onClick={handleCopyCode} className={styles.copyBtn}>
-              {copied ? '✓ Copied!' : '📋 Copy Code'}
+              {copiedCode ? '✓ Copied!' : '📋 Copy Code'}
             </button>
+          </div>
+
+          {/* QR Code Section */}
+          <div className={styles.qrSection}>
+            <div className={styles.qrCard}>
+              <QRCodeSVG
+                value={shareUrl}
+                size={140}
+                bgColor="#ffffff"
+                fgColor="#0f172a"
+                level="M"
+                includeMargin={false}
+              />
+            </div>
+            <div className={styles.qrPrompt}>
+              <span>📱 Scan with phone to join instantly</span>
+              <button onClick={handleCopyLink} className={styles.copyLinkBtn}>
+                {copiedLink ? '✓ Link Copied!' : '🔗 Copy Share Link'}
+              </button>
+            </div>
           </div>
 
           <div className={styles.pulseBox}>
             <div className={styles.spinner}></div>
-            <span>Waiting for opponent to join...</span>
+            <span>Waiting for opponent to connect...</span>
           </div>
         </div>
       </div>
