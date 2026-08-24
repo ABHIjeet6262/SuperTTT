@@ -4,9 +4,9 @@
   gap: 10px;
   max-width: 500px;
   width: 100%;
-  aspect-ratio: 1;
+  height: auto;
   margin: 0 auto;
-  padding: 10px;
+  padding: 12px;
   background: var(--bg-secondary);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-lg);
@@ -16,6 +16,6 @@
 @media (max-width: 540px) {
   .mainBoard {
     gap: 6px;
-    padding: 6px;
+    padding: 8px;
   }
 }
