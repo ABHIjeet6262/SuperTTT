@@ -1,6 +1,9 @@
 import { Client } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080';
+const WS_ENDPOINT = `${BACKEND_URL}/ws/game`;
+
 class WebSocketService {
   constructor() {
     this.stompClient = null;
@@ -13,7 +16,7 @@ class WebSocketService {
       return;
     }
 
-    const socket = new SockJS('http://localhost:8080/ws/game');
+    const socket = new SockJS(WS_ENDPOINT);
     this.stompClient = new Client({
       webSocketFactory: () => socket,
       debug: (str) => {},
