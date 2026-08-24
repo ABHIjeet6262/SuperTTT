@@ -1,105 +1,85 @@
 .guideContainer {
-  padding: 50px 20px 70px 20px;
+  padding: 50px 20px;
   max-width: 860px;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 48px;
 }
 
-.header h1 {
-  font-size: 2.2rem;
+.badge {
+  color: var(--accent-cyan);
+  font-size: 0.85rem;
   font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin: 12px 0;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.ruleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.ruleCard {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-backdrop);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--border-radius-md);
+  padding: 24px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.stepNum {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.2rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(79, 172, 254, 0.3);
+}
+
+.ruleBody h2 {
+  font-size: 1.3rem;
   margin-bottom: 8px;
   color: var(--text-primary);
 }
 
-.header p {
+.ruleBody p {
   color: var(--text-secondary);
-  font-size: 1rem;
-}
-
-.sectionsGrid {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  margin-bottom: 40px;
-}
-
-.ruleCard {
-  background: var(--bg-surface);
-  border: 1px solid var(--bg-card-border);
-  border-radius: var(--border-radius-md);
-  padding: 24px;
-  box-shadow: var(--shadow-sm);
-  transition: border-color var(--transition);
-}
-
-.ruleCard:hover {
-  border-color: var(--bg-card-border-hover);
-}
-
-.stepBadge {
-  display: inline-block;
-  background: var(--accent-primary-subtle);
-  color: var(--accent-primary);
-  border: 1px solid var(--accent-border);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 4px;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.ruleCard h2 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: var(--text-primary);
-}
-
-.ruleCard p {
-  color: var(--text-secondary);
-  font-size: 0.92rem;
+  font-size: 0.98rem;
   line-height: 1.6;
 }
 
-.actionCta {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  flex-wrap: wrap;
+.exampleBox {
+  background: rgba(0, 242, 254, 0.05);
+  border-left: 3px solid var(--accent-cyan);
+  padding: 12px 16px;
+  border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+  margin-top: 12px;
 }
 
-.ctaPrimaryBtn {
-  background: var(--accent-primary);
-  color: #ffffff;
-  font-weight: 600;
-  padding: 12px 24px;
-  border-radius: var(--border-radius-sm);
-  font-size: 0.95rem;
-  transition: background var(--transition);
-}
-
-.ctaPrimaryBtn:hover {
-  background: var(--accent-primary-hover);
-}
-
-.ctaSecondaryBtn {
-  background: var(--bg-surface);
+.exampleBox p {
   color: var(--text-primary);
-  border: 1px solid var(--bg-card-border);
-  font-weight: 600;
-  padding: 12px 24px;
-  border-radius: var(--border-radius-sm);
-  font-size: 0.95rem;
-  transition: all var(--transition);
-}
-
-.ctaSecondaryBtn:hover {
-  background: var(--bg-surface-hover);
-  border-color: var(--bg-card-border-hover);
+  font-size: 0.9rem;
 }

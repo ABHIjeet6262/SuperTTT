@@ -134,11 +134,3 @@ export const processMove = (gameState, boardIndex, cellIndex) => {
     }
   };
 };
-
-/**
- * Convenience helper for local pass-and-play move execution
- */
-export const handleLocalMove = (gameState, boardIndex, cellIndex) => {
-  const result = processMove(gameState, boardIndex, cellIndex);
-  return result.success ? result.newState : gameState;
-};

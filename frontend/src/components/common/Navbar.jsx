@@ -7,6 +7,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const user = authService.getCurrentUser();
 
+  // Theme state: 'dark' or 'light'
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('superttt_theme') || 'dark';
   });
@@ -40,7 +41,7 @@ const Navbar = () => {
     <header className={styles.header}>
       <div className={`container ${styles.navContainer}`}>
         <Link to="/" className={styles.logoGroup}>
-          <span className={styles.logoBadge}>ST</span>
+          <span className={styles.logoIcon}>⚡</span>
           <span className={styles.logoText}>Super<span className={styles.highlight}>TTT</span></span>
         </Link>
 
@@ -57,21 +58,21 @@ const Navbar = () => {
           <button 
             onClick={toggleTheme} 
             className={styles.themeToggleBtn}
-            aria-label="Toggle theme"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
           >
-            {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
+            {theme === 'dark' ? '☀️ Light' : '🌙 Dark'}
           </button>
 
           {user ? (
-            <button onClick={handleLogout} className={styles.secondaryBtn}>
+            <button onClick={handleLogout} className={styles.guestBtn}>
               Log Out ({user.username})
             </button>
           ) : (
             <>
-              <button onClick={() => navigate('/guest')} className={styles.secondaryBtn}>
+              <button onClick={() => navigate('/guest')} className={styles.guestBtn}>
                 Play as Guest
               </button>
-              <button onClick={() => navigate('/login')} className={styles.primaryBtn}>
+              <button onClick={() => navigate('/login')} className={styles.loginBtn}>
                 Login
               </button>
             </>

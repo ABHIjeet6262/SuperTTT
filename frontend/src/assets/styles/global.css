@@ -13,9 +13,10 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   line-height: 1.5;
-  transition: background-color var(--transition), color var(--transition);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(2, 132, 199, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(225, 29, 72, 0.05) 0%, transparent 40%);
 }
 
 #root {
@@ -28,16 +29,17 @@ main {
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding-bottom: 40px;
 }
 
 a {
-  color: var(--accent-primary);
+  color: var(--accent-blue);
   text-decoration: none;
-  transition: color var(--transition);
+  transition: color var(--transition-fast);
 }
 
 a:hover {
-  color: var(--accent-primary-hover);
+  color: var(--accent-cyan);
 }
 
 button {
@@ -49,24 +51,26 @@ button {
 
 /* Common Container */
 .container {
-  max-width: 1080px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
   width: 100%;
 }
 
-/* Card Style */
-.card {
-  background: var(--bg-surface);
+/* Glassmorphism Card Style */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-backdrop);
+  -webkit-backdrop-filter: var(--glass-backdrop);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-md);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--box-shadow-card);
   padding: 24px;
 }
 
-/* Scrollbars */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -74,10 +78,10 @@ button {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-card-border);
-  border-radius: 3px;
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
+  background: rgba(148, 163, 184, 0.5);
 }

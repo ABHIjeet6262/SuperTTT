@@ -32,8 +32,9 @@ const GuestSetupPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.guestCard}>
+        <div className={styles.iconHeader}>👤</div>
         <h2>Play as Guest</h2>
-        <p>Choose a temporary display name to join or create online games.</p>
+        <p>No registration required. Choose a display name and jump right into the game!</p>
 
         <form onSubmit={handleSubmit} className={styles.form}>
           {error && <div className={styles.errorMsg}>{error}</div>}
@@ -43,7 +44,7 @@ const GuestSetupPage = () => {
             <input
               id="displayName"
               type="text"
-              placeholder="Enter your name"
+              placeholder="e.g. Alex, NeonKnight"
               value={displayName}
               onChange={(e) => {
                 setDisplayName(e.target.value);
@@ -55,7 +56,7 @@ const GuestSetupPage = () => {
           </div>
 
           <button type="submit" className={styles.submitBtn}>
-            Continue to Lobby
+            Continue to Lobby ➔
           </button>
         </form>
       </div>

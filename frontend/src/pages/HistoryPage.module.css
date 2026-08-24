@@ -1,146 +1,116 @@
-.container {
-  padding: 40px 20px;
-  max-width: 800px;
-}
-
 .centerBox {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: calc(100vh - var(--navbar-height) - 100px);
+  min-height: calc(100vh - var(--navbar-height) - 70px);
+  padding: 20px;
 }
 
 .errorCard {
-  background: var(--bg-surface);
+  background: var(--bg-card);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-lg);
-  padding: 36px 30px;
+  padding: 40px;
   text-align: center;
-  max-width: 420px;
+  max-width: 440px;
   width: 100%;
-  box-shadow: var(--shadow-sm);
 }
 
 .errorCard h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: 800;
   margin-bottom: 8px;
-  color: var(--text-primary);
 }
 
 .errorCard p {
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   margin-bottom: 24px;
 }
 
 .primaryBtn {
-  background: var(--accent-primary);
-  color: #ffffff;
-  padding: 10px 20px;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  color: #fff;
+  font-weight: 700;
+  padding: 10px 24px;
   border-radius: var(--border-radius-sm);
-  font-weight: 600;
-  font-size: 0.9rem;
-  transition: background var(--transition);
 }
 
-.primaryBtn:hover {
-  background: var(--accent-primary-hover);
+.container {
+  padding: 50px 20px;
+  max-width: 860px;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 .header h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: var(--text-primary);
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 8px;
 }
 
 .header p {
   color: var(--text-secondary);
-  font-size: 0.95rem;
+  font-size: 1.05rem;
 }
 
 .emptyCard {
-  background: var(--bg-surface);
+  background: var(--bg-card);
   border: 1px solid var(--bg-card-border);
-  border-radius: var(--border-radius-md);
-  padding: 48px 24px;
+  border-radius: var(--border-radius-lg);
+  padding: 60px;
   text-align: center;
-  box-shadow: var(--shadow-sm);
-}
-
-.emptyCard h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  margin-bottom: 6px;
-  color: var(--text-primary);
-}
-
-.emptyCard p {
   color: var(--text-secondary);
-  font-size: 0.9rem;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  margin-bottom: 12px;
 }
 
 .historyList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .gameCard {
-  background: var(--bg-surface);
+  background: var(--bg-card);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-md);
-  padding: 16px 20px;
+  padding: 20px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  box-shadow: var(--shadow-sm);
 }
 
 .players {
-  font-weight: 600;
-  font-size: 0.95rem;
+  font-weight: 700;
+  font-size: 1.05rem;
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.playerX {
-  color: var(--player-x-color);
-}
-
-.playerO {
-  color: var(--player-o-color);
+  gap: 12px;
 }
 
 .vs {
-  font-size: 0.8rem;
-  font-weight: 700;
   color: var(--text-muted);
-}
-
-.resultBadge {
-  font-weight: 600;
-  font-size: 0.88rem;
+  font-size: 0.85rem;
 }
 
 .winnerText {
-  color: var(--status-success);
+  color: var(--accent-cyan);
+  font-weight: 700;
 }
 
 .drawText {
   color: var(--text-muted);
+  font-weight: 700;
 }
 
 .date {
   color: var(--text-muted);
-  font-size: 0.82rem;
+  font-size: 0.88rem;
 }

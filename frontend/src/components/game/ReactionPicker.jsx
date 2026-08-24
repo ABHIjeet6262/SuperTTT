@@ -1,20 +1,21 @@
 import React from 'react';
 import styles from './ReactionPicker.module.css';
 
-const QUICK_REACTIONS = ['GG', 'Well Played', 'Nice Move', '🔥', '👍'];
+const REACTIONS = ['👍', '😂', '😮', '🔥', 'GG'];
 
 const ReactionPicker = ({ onSendReaction }) => {
   return (
     <div className={styles.container}>
-      <span className={styles.label}>Quick Chat:</span>
+      <span className={styles.label}>Quick Reaction:</span>
       <div className={styles.buttonsGroup}>
-        {QUICK_REACTIONS.map((item) => (
+        {REACTIONS.map((emoji) => (
           <button
-            key={item}
-            onClick={() => onSendReaction(item)}
+            key={emoji}
+            onClick={() => onSendReaction(emoji)}
             className={styles.reactionBtn}
+            title={`Send ${emoji}`}
           >
-            {item}
+            {emoji}
           </button>
         ))}
       </div>

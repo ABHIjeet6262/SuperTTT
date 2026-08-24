@@ -1,11 +1,11 @@
 .header {
   height: var(--navbar-height);
-  background: var(--bg-surface);
+  background: rgba(11, 14, 20, 0.85);
+  backdrop-filter: var(--glass-backdrop);
   border-bottom: 1px solid var(--bg-card-border);
   position: sticky;
   top: 0;
   z-index: 100;
-  transition: background var(--transition), border-color var(--transition);
 }
 
 .navContainer {
@@ -18,42 +18,39 @@
 .logoGroup {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   text-decoration: none;
 }
 
-.logoBadge {
-  background: var(--accent-primary);
-  color: #ffffff;
-  font-size: 0.8rem;
-  font-weight: 800;
-  padding: 3px 6px;
-  border-radius: var(--border-radius-sm);
-  letter-spacing: 0.5px;
+.logoIcon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 0 8px var(--accent-cyan));
 }
 
 .logoText {
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.3px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
   color: var(--text-primary);
 }
 
 .highlight {
-  color: var(--accent-primary);
+  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .navLinks {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 28px;
 }
 
 .navLink {
   color: var(--text-secondary);
   font-weight: 500;
-  font-size: 0.9rem;
-  transition: color var(--transition);
+  font-size: 0.95rem;
+  transition: color var(--transition-fast);
 }
 
 .navLink:hover {
@@ -63,56 +60,54 @@
 .authButtons {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .themeToggleBtn {
-  background: var(--bg-primary);
-  color: var(--text-secondary);
-  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+  padding: 8px 14px;
   border-radius: var(--border-radius-sm);
-  font-weight: 500;
-  font-size: 0.82rem;
+  font-weight: 600;
+  font-size: 0.85rem;
   border: 1px solid var(--bg-card-border);
-  transition: all var(--transition);
+  transition: all var(--transition-fast);
 }
 
 .themeToggleBtn:hover {
-  background: var(--bg-surface-hover);
-  color: var(--text-primary);
-  border-color: var(--bg-card-border-hover);
+  background: rgba(255, 255, 255, 0.16);
 }
 
-.secondaryBtn {
-  background: var(--bg-primary);
+.guestBtn {
+  background: rgba(255, 255, 255, 0.06);
   color: var(--text-primary);
-  padding: 7px 14px;
+  padding: 8px 16px;
   border-radius: var(--border-radius-sm);
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   border: 1px solid var(--bg-card-border);
-  transition: all var(--transition);
+  transition: all var(--transition-fast);
 }
 
-.secondaryBtn:hover {
-  background: var(--bg-surface-hover);
-  border-color: var(--bg-card-border-hover);
+.guestBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
-.primaryBtn {
-  background: var(--accent-primary);
-  color: #ffffff;
-  padding: 7px 16px;
+.loginBtn {
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+  color: #fff;
+  padding: 8px 18px;
   border-radius: var(--border-radius-sm);
   font-weight: 600;
-  font-size: 0.85rem;
-  border: 1px solid var(--accent-primary);
-  transition: all var(--transition);
+  font-size: 0.9rem;
+  box-shadow: 0 4px 14px rgba(79, 172, 254, 0.3);
+  transition: all var(--transition-fast);
 }
 
-.primaryBtn:hover {
-  background: var(--accent-primary-hover);
-  border-color: var(--accent-primary-hover);
+.loginBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(79, 172, 254, 0.5);
 }
 
 @media (max-width: 768px) {

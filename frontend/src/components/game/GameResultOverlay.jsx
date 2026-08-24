@@ -2,40 +2,39 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './GameResultOverlay.module.css';
 
-const GameResultOverlay = ({
-  winner = 'DRAW',
-  playerXName = 'Player 1',
-  playerOName = 'Player 2',
-  onRematch,
-}) => {
+const GameResultOverlay = ({ winner, playerXName, playerOName, onRematch }) => {
   const navigate = useNavigate();
 
   const isDraw = winner === 'DRAW';
-  const winnerName = winner === 'X' ? playerXName : playerOName;
+  const winnerName = winner === 'X' ? playerXName : winner === 'O' ? playerOName : null;
 
   return (
-    <div className={styles.overlayBackdrop}>
-      <div className={styles.resultCard}>
-        <div className={styles.statusBadge}>
-          {isDraw ? 'Game Over' : 'Match Won'}
+    <div className={styles.overlay}>
+      <div className={styles.modalCard}>
+        <div className={styles.icon}>
+          {isDraw ? '🤝' : '🏆'}
         </div>
 
-        <h1 className={styles.title}>
-          {isDraw ? 'Match Drawn' : `${winnerName} Wins`}
-        </h1>
-
-        <p className={styles.subtitle}>
-          {isDraw 
-            ? 'A closely contested match with no overall 3-in-a-row winner.' 
-            : `${winnerName} claimed 3 small boards in a row.`}
-        </p>
+        {isDraw ? (
+          <>
+            <h1 className={styles.title}>GAME DRAW!</h1>
+            <p className={styles.message}>Both players fought to a total stalemate.</p>
+          </>
+        ) : (
+          <>
+            <h1 className={styles.title}>
+              PLAYER <span className={winner === 'X' ? styles.xText : styles.oText}>{winner}</span> WINS!
+            </h1>
+            <p className={styles.message}>Congratulations, <strong>{winnerName}</strong>!</p>
+          </>
+        )}
 
         <div className={styles.actionButtons}>
           <button onClick={onRematch} className={styles.rematchBtn}>
-            Play Again
+            🔄 Play Again
           </button>
-          <button onClick={() => navigate('/lobby')} className={styles.lobbyBtn}>
-            Return to Lobby
+          <button onClick={() => navigate('/')} className={styles.homeBtn}>
+            🏠 Back to Home
           </button>
         </div>
       </div>

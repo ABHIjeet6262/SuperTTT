@@ -36,7 +36,7 @@ const HistoryPage = () => {
     return (
       <div className={`container ${styles.centerBox}`}>
         <div className={styles.errorCard}>
-          <h2>Sign In Required</h2>
+          <h2>🔒 Registered Users Only</h2>
           <p>{error}</p>
           <button onClick={() => navigate('/login')} className={styles.primaryBtn}>
             Sign In
@@ -55,22 +55,23 @@ const HistoryPage = () => {
 
       {history.length === 0 ? (
         <div className={styles.emptyCard}>
-          <h3>No Games Recorded</h3>
-          <p>Play online matches to view your game log here.</p>
+          <div className={styles.emptyIcon}>🎮</div>
+          <h3>No Games Played Yet</h3>
+          <p>Play online games to build your match history.</p>
         </div>
       ) : (
         <div className={styles.historyList}>
           {history.map((game) => (
             <div key={game.id} className={styles.gameCard}>
               <div className={styles.players}>
-                <span className={styles.playerX}>{game.playerXName} (X)</span>
-                <span className={styles.vs}>vs</span>
-                <span className={styles.playerO}>{game.playerOName} (O)</span>
+                <span>{game.playerXName} (X)</span>
+                <span className={styles.vs}>VS</span>
+                <span>{game.playerOName} (O)</span>
               </div>
 
               <div className={styles.resultBadge}>
                 {game.winner === 'DRAW' ? (
-                  <span className={styles.drawText}>Draw</span>
+                  <span className={styles.drawText}>DRAW</span>
                 ) : (
                   <span className={styles.winnerText}>Winner: {game.winner}</span>
                 )}
