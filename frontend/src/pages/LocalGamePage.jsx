@@ -1,92 +1,73 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import MainBoard from '../components/game/MainBoard';
 import TurnIndicator from '../components/game/TurnIndicator';
 import GameResultOverlay from '../components/game/GameResultOverlay';
-import { createInitialGameState, processMove } from '../utils/superTicTacToeEngine';
+import { 
+  createInitialGameState, 
+  handleLocalMove 
+} from '../utils/superTicTacToeEngine';
 import styles from './LocalGamePage.module.css';
 
 const LocalGamePage = () => {
-  const [playerXName, setPlayerXName] = useState('Player 1');
-  const [playerOName, setPlayerOName] = useState('Player 2');
-  const [isSetupDone, setIsSetupDone] = useState(false);
+  const navigate = useNavigate();
   const [gameState, setGameState] = useState(createInitialGameState());
-  const [errorMessage, setErrorMessage] = useState('');
+  const [playerXName, setPlayerXName] = useState('Player X');
+  const [playerOName, setPlayerOName] = useState('Player O');
+  const [isEditingNames, setIsEditingNames] = useState(false);
 
   const handleCellClick = (boardIndex, cellIndex) => {
-    setErrorMessage('');
-    const result = processMove(gameState, boardIndex, cellIndex);
-
-    if (result.success) {
-      setGameState(result.newState);
-    } else {
-      setErrorMessage(result.reason);
-    }
+    const updatedState = handleLocalMove(gameState, boardIndex, cellIndex);
+    setGameState(updatedState);
   };
 
-  const handleRestart = () => {
+  const handleResetGame = () => {
     setGameState(createInitialGameState());
-    setErrorMessage('');
   };
-
-  const handleRematchSwap = () => {
-    // Swap Player X and Player O names on rematch as specified in requirement #25
-    setPlayerXName(playerOName);
-    setPlayerOName(playerXName);
-    setGameState(createInitialGameState());
-    setErrorMessage('');
-  };
-
-  if (!isSetupDone) {
-    return (
-      <div className={styles.setupContainer}>
-        <div className={styles.setupCard}>
-          <div className={styles.icon}>📱</div>
-          <h2>Local Pass & Play</h2>
-          <p>Two players take turns on the same device screen.</p>
-
-          <form onSubmit={(e) => { e.preventDefault(); setIsSetupDone(true); }} className={styles.form}>
-            <div className={styles.field}>
-              <label>Player X Name</label>
-              <input
-                type="text"
-                value={playerXName}
-                onChange={(e) => setPlayerXName(e.target.value)}
-                placeholder="e.g. Alex"
-                maxLength={20}
-                required
-              />
-            </div>
-
-            <div className={styles.field}>
-              <label>Player O Name</label>
-              <input
-                type="text"
-                value={playerOName}
-                onChange={(e) => setPlayerOName(e.target.value)}
-                placeholder="e.g. Rahul"
-                maxLength={20}
-                required
-              />
-            </div>
-
-            <button type="submit" className={styles.startBtn}>
-              🎮 Start Local Game
-            </button>
-          </form>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className={`container ${styles.gamePageContainer}`}>
+      {/* Header Bar with Names and Reset */}
       <div className={styles.headerBar}>
-        <div className={styles.titleBadge}>📱 Local Pass & Play</div>
-        <button onClick={handleRestart} className={styles.resetBtn}>
-          🔄 Restart Match
-        </button>
+        <div className={styles.modeTag}>Pass & Play Mode</div>
+        <div className={styles.headerActions}>
+          <button 
+            onClick={() => setIsEditingNames(!isEditingNames)} 
+            className={styles.secondaryBtn}
+          >
+            {isEditingNames ? 'Done Editing' : 'Edit Names'}
+          </button>
+          <button onClick={handleResetGame} className={styles.secondaryBtn}>
+            Reset Board
+          </button>
+        </div>
       </div>
 
+      {/* Name Customization Drawer */}
+      {isEditingNames && (
+        <div className={styles.nameEditCard}>
+          <div className={styles.nameField}>
+            <label>Player X Name</label>
+            <input 
+              type="text" 
+              value={playerXName} 
+              onChange={(e) => setPlayerXName(e.target.value || 'Player X')} 
+              maxLength={15}
+            />
+          </div>
+          <div className={styles.nameField}>
+            <label>Player O Name</label>
+            <input 
+              type="text" 
+              value={playerOName} 
+              onChange={(e) => setPlayerOName(e.target.value || 'Player O')} 
+              maxLength={15}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Turn Indicator */}
       <TurnIndicator
         playerXName={playerXName}
         playerOName={playerOName}
@@ -95,21 +76,19 @@ const LocalGamePage = () => {
         lastMove={gameState.lastMove}
       />
 
-      {errorMessage && (
-        <div className={styles.errorBanner}>{errorMessage}</div>
-      )}
-
+      {/* 9x9 Nested Board */}
       <MainBoard
         gameState={gameState}
         onCellClick={handleCellClick}
       />
 
+      {/* Game Result Overlay */}
       {gameState.status === 'FINISHED' && (
         <GameResultOverlay
           winner={gameState.winner}
           playerXName={playerXName}
           playerOName={playerOName}
-          onRematch={handleRematchSwap}
+          onRematch={handleResetGame}
         />
       )}
     </div>

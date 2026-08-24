@@ -16,7 +16,7 @@ const ProfilePage = () => {
         const data = await userService.getProfile();
         setProfile(data);
       } catch (err) {
-        setError('Please log in to view your profile and persistent statistics.');
+        setError('Please log in to view your profile and statistics.');
       } finally {
         setLoading(false);
       }
@@ -42,7 +42,7 @@ const ProfilePage = () => {
     return (
       <div className={`container ${styles.centerBox}`}>
         <div className={styles.card}>
-          <h2>🔒 Registered Users Only</h2>
+          <h2>Sign In Required</h2>
           <p>{error}</p>
           <div className={styles.btnRow}>
             <button onClick={() => navigate('/login')} className={styles.primaryBtn}>

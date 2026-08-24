@@ -68,7 +68,7 @@ const GamePage = () => {
 
         if (message.type === 'REMATCH_REQUESTED') {
           if (message.playerId !== playerId) {
-            setRematchStatus(`${message.playerName} wants a rematch! Click Play Again to accept.`);
+            setRematchStatus(`${message.playerName} wants a rematch. Click Play Again to accept.`);
           } else {
             setRematchStatus('Waiting for opponent to accept rematch...');
           }
@@ -116,7 +116,7 @@ const GamePage = () => {
     return (
       <div className={`container ${styles.centerBox}`}>
         <div className={styles.errorCard}>
-          <h2>⚠️ Room Error</h2>
+          <h2>Room Error</h2>
           <p>{error}</p>
           <button onClick={() => navigate('/lobby')} className={styles.actionBtn}>
             Back to Lobby
@@ -136,20 +136,20 @@ const GamePage = () => {
     return (
       <div className={`container ${styles.centerBox}`}>
         <div className={styles.waitingCard}>
-          <div className={styles.badge}>ROOM CREATED</div>
-          <h2>Your Room is Ready!</h2>
-          <p>Share this 6-character room code with your opponent:</p>
+          <div className={styles.badge}>Private Room</div>
+          <h2>Room Code</h2>
+          <p>Share this code with your opponent to begin:</p>
 
           <div className={styles.codeBox}>
             <span className={styles.codeText}>{roomCode}</span>
             <button onClick={handleCopyCode} className={styles.copyBtn}>
-              {copied ? '✓ Copied!' : '📋 Copy Code'}
+              {copied ? 'Copied' : 'Copy Code'}
             </button>
           </div>
 
           <div className={styles.pulseBox}>
             <div className={styles.spinner}></div>
-            <span>Waiting for opponent to join...</span>
+            <span>Waiting for opponent to connect...</span>
           </div>
         </div>
       </div>
@@ -163,7 +163,7 @@ const GamePage = () => {
   return (
     <div className={`container ${styles.gamePageContainer}`}>
       <div className={styles.headerBar}>
-        <div className={styles.roomInfo}>ROOM: <strong>{roomCode}</strong></div>
+        <div className={styles.roomInfo}>Room: <strong>{roomCode}</strong></div>
         <button onClick={() => navigate('/lobby')} className={styles.leaveBtn}>
           Leave Room
         </button>
@@ -181,7 +181,7 @@ const GamePage = () => {
 
       {activeReaction && (
         <div className={styles.reactionBanner}>
-          {activeReaction.player} sent {activeReaction.reaction}
+          <strong>{activeReaction.player}</strong>: {activeReaction.reaction}
         </div>
       )}
 

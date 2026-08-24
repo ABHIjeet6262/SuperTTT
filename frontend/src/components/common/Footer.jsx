@@ -9,7 +9,7 @@ const Footer = () => {
           <p>© {new Date().getFullYear()} SuperTTT. All rights reserved.</p>
         </div>
         <div className={styles.right}>
-          <span>Strategic Real-Time Multiplayer Tic-Tac-Toe</span>
+          <span>Strategic 9×9 Multiplayer Tic-Tac-Toe</span>
         </div>
       </div>
     </footer>

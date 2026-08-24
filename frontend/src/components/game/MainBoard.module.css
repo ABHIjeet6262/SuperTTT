@@ -7,10 +7,11 @@
   aspect-ratio: 1;
   margin: 0 auto;
   padding: 10px;
-  background: var(--bg-secondary);
+  background: var(--bg-surface);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--box-shadow-card);
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition), border-color var(--transition);
 }
 
 @media (max-width: 540px) {

@@ -4,10 +4,10 @@
   margin: 0 auto 16px auto;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
-.playersGrid {
+.playersRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -16,96 +16,87 @@
 
 .playerCard {
   flex: 1;
-  background: var(--bg-card);
-  backdrop-filter: var(--glass-backdrop);
-  border: 1px solid var(--bg-card-border);
-  border-radius: var(--border-radius-md);
-  padding: 10px 16px;
   display: flex;
   align-items: center;
-  gap: 12px;
-  transition: all 0.25s ease;
+  gap: 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--border-radius-md);
+  padding: 10px 14px;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
 }
 
-.symbolX {
-  color: var(--player-x-color);
-  font-weight: 900;
-  font-size: 1.4rem;
+.activeTurn {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary-subtle);
 }
 
-.symbolO {
-  color: var(--player-o-color);
-  font-weight: 900;
-  font-size: 1.4rem;
+.markBadge {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1rem;
+  border-radius: var(--border-radius-sm);
+}
+
+.playerX .markBadge {
+  background: var(--accent-primary);
+  color: #ffffff;
+}
+
+.playerO .markBadge {
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 .name {
-  font-weight: 700;
-  font-size: 1rem;
+  font-weight: 600;
+  font-size: 0.92rem;
   color: var(--text-primary);
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .vsBadge {
-  font-weight: 900;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 700;
   color: var(--text-muted);
-  background: rgba(255, 255, 255, 0.05);
-  padding: 6px 12px;
-  border-radius: 20px;
+  text-transform: uppercase;
 }
 
-.activePlayerX {
-  border-color: var(--player-x-color);
-  box-shadow: 0 0 14px var(--player-x-glow);
-}
-
-.activePlayerO {
-  border-color: var(--player-o-color);
-  box-shadow: 0 0 14px var(--player-o-glow);
-}
-
-.guidanceBox {
-  background: rgba(20, 25, 35, 0.8);
+.statusBox {
+  background: var(--bg-surface);
   border: 1px solid var(--bg-card-border);
-  border-radius: var(--border-radius-sm);
-  padding: 10px 16px;
-  text-align: center;
+  border-radius: var(--border-radius-md);
+  padding: 8px 14px;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 0.9rem;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.84rem;
 }
 
 .turnText {
-  font-weight: 600;
   color: var(--text-secondary);
 }
 
-.highlightX {
-  color: var(--player-x-color);
-  font-weight: 800;
-}
-
-.highlightO {
-  color: var(--player-o-color);
-  font-weight: 800;
-}
-
-.activeBoardText {
+.turnPlayer {
+  font-weight: 700;
   color: var(--text-primary);
-  font-size: 0.92rem;
+}
+
+.boardPrompt {
+  font-weight: 600;
 }
 
 .wildcard {
-  color: var(--status-success);
-  font-weight: 700;
+  color: var(--accent-primary);
 }
 
-.lastMoveText {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-top: 2px;
+.targetBoard {
+  color: var(--text-secondary);
 }

@@ -1,12 +1,12 @@
 .footer {
-  margin-top: 60px;
+  margin-top: auto;
   border-top: 1px solid var(--bg-card-border);
-  background: var(--bg-secondary);
-  padding: 24px 0;
-  font-size: 0.85rem;
+  background: var(--bg-surface);
+  padding: 20px 0;
+  font-size: 0.82rem;
   color: var(--text-muted);
-  position: relative;
   width: 100%;
+  transition: background var(--transition), border-color var(--transition);
 }
 
 .footerContainer {

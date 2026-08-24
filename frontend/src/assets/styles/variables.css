@@ -1,82 +1,91 @@
-/* Gaming & Clean Modern Theme Variables */
+/* Clean, Minimalist Black, White & Blue Design System */
 :root {
-  /* Default Dark Mode */
-  --bg-primary: #0b0e14;
-  --bg-secondary: #141923;
-  --bg-card: rgba(22, 28, 42, 0.75);
-  --bg-card-border: rgba(255, 255, 255, 0.1);
-  --bg-card-hover: rgba(30, 39, 58, 0.85);
+  /* Default: Dark Theme */
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-surface: #1e293b;
+  --bg-surface-hover: #273549;
+  --bg-card-border: #334155;
+  --bg-card-border-hover: #475569;
 
-  /* Primary Accent Colors */
-  --accent-cyan: #00f2fe;
-  --accent-blue: #4facfe;
-  --accent-purple: #7f00ff;
-  --accent-magenta: #e100ff;
-  
+  /* Primary Blue Accents */
+  --accent-primary: #3b82f6;
+  --accent-primary-hover: #60a5fa;
+  --accent-primary-subtle: rgba(59, 130, 246, 0.12);
+  --accent-border: #3b82f6;
+
   /* Player Colors */
-  --player-x-color: #00e5ff;
-  --player-x-glow: rgba(0, 229, 255, 0.4);
-  --player-o-color: #ff2a6d;
-  --player-o-glow: rgba(255, 42, 109, 0.4);
+  --player-x-color: #3b82f6;
+  --player-x-bg: rgba(59, 130, 246, 0.12);
+  --player-o-color: #f8fafc;
+  --player-o-bg: rgba(248, 250, 252, 0.12);
 
-  /* Active Board Highlighting */
-  --active-board-border: #00ffcc;
-  --active-board-glow: rgba(0, 255, 204, 0.35);
+  /* Active Board Highlighting (Crisp & Simple) */
+  --active-board-border: #3b82f6;
+  --active-board-bg: rgba(59, 130, 246, 0.08);
 
   /* Text Colors */
-  --text-primary: #f0f4f8;
+  --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --text-muted: #64748b;
-  
+
   /* Status Colors */
-  --status-success: #00e676;
-  --status-warning: #ffab00;
-  --status-error: #ff5252;
+  --status-success: #22c55e;
+  --status-warning: #f59e0b;
+  --status-error: #ef4444;
+  --status-error-bg: rgba(239, 68, 68, 0.12);
 
-  /* Typography */
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  /* Typography & Layout */
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --navbar-height: 64px;
+  --border-radius-sm: 6px;
+  --border-radius-md: 10px;
+  --border-radius-lg: 14px;
 
-  /* Layout Spacing */
-  --navbar-height: 70px;
-  --border-radius-sm: 8px;
-  --border-radius-md: 14px;
-  --border-radius-lg: 20px;
-  
   /* Transitions & Shadows */
-  --transition-fast: 0.2s ease;
-  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --box-shadow-card: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  --glass-backdrop: blur(12px);
+  --transition: 0.15s ease;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
 
-/* Light Theme Variables Override */
+/* Light Theme Variables */
 [data-theme='light'] {
-  --bg-primary: #f8fafc;
-  --bg-secondary: #ffffff;
-  --bg-card: rgba(255, 255, 255, 0.85);
-  --bg-card-border: rgba(203, 213, 225, 0.8);
-  --bg-card-hover: rgba(241, 245, 249, 0.95);
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #f1f5f9;
+  --bg-card-border: #e2e8f0;
+  --bg-card-border-hover: #cbd5e1;
 
-  --accent-cyan: #0284c7;
-  --accent-blue: #2563eb;
-  --accent-purple: #7c3aed;
-  --accent-magenta: #d946ef;
+  /* Primary Blue Accents */
+  --accent-primary: #2563eb;
+  --accent-primary-hover: #1d4ed8;
+  --accent-primary-subtle: #eff6ff;
+  --accent-border: #2563eb;
 
-  --player-x-color: #0284c7;
-  --player-x-glow: rgba(2, 132, 199, 0.25);
-  --player-o-color: #e11d48;
-  --player-o-glow: rgba(225, 29, 72, 0.25);
+  /* Player Colors */
+  --player-x-color: #2563eb;
+  --player-x-bg: #eff6ff;
+  --player-o-color: #0f172a;
+  --player-o-bg: #f1f5f9;
 
-  --active-board-border: #0d9488;
-  --active-board-glow: rgba(13, 148, 136, 0.25);
+  /* Active Board Highlighting (Crisp & Simple) */
+  --active-board-border: #2563eb;
+  --active-board-bg: #f0f7ff;
 
+  /* Text Colors */
   --text-primary: #0f172a;
   --text-secondary: #475569;
-  --text-muted: #64748b;
+  --text-muted: #94a3b8;
 
+  /* Status Colors */
   --status-success: #16a34a;
   --status-warning: #d97706;
   --status-error: #dc2626;
+  --status-error-bg: #fef2f2;
 
-  --box-shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
 }

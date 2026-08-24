@@ -1,46 +1,46 @@
 import React from 'react';
 import styles from './TurnIndicator.module.css';
 
-const TurnIndicator = ({ playerXName, playerOName, currentPlayer, activeBoard, lastMove }) => {
+const TurnIndicator = ({
+  playerXName = 'Player 1',
+  playerOName = 'Player 2',
+  currentPlayer = 'X',
+  activeBoard = -1,
+  lastMove = null,
+}) => {
   const isXTurn = currentPlayer === 'X';
-  const currentName = isXTurn ? playerXName : playerOName;
+  const isWildcard = activeBoard === -1;
 
   return (
     <div className={styles.container}>
-      {/* Player Header Cards */}
-      <div className={styles.playersGrid}>
-        <div className={`${styles.playerCard} ${isXTurn ? styles.activePlayerX : ''}`}>
-          <span className={styles.symbolX}>X</span>
-          <span className={styles.name}>{playerXName}</span>
+      {/* Player Cards */}
+      <div className={styles.playersRow}>
+        <div className={`${styles.playerCard} ${styles.playerX} ${isXTurn ? styles.activeTurn : ''}`}>
+          <div className={styles.markBadge}>X</div>
+          <div className={styles.name}>{playerXName}</div>
         </div>
 
-        <div className={styles.vsBadge}>VS</div>
+        <div className={styles.vsBadge}>vs</div>
 
-        <div className={`${styles.playerCard} ${!isXTurn ? styles.activePlayerO : ''}`}>
-          <span className={styles.symbolO}>O</span>
-          <span className={styles.name}>{playerOName}</span>
+        <div className={`${styles.playerCard} ${styles.playerO} {!isXTurn ? styles.activeTurn : ''}`}>
+          <div className={styles.markBadge}>O</div>
+          <div className={styles.name}>{playerOName}</div>
         </div>
       </div>
 
-      {/* Turn & Target Board Guidance */}
-      <div className={styles.guidanceBox}>
+      {/* Turn & Board Target Status */}
+      <div className={styles.statusBox}>
         <div className={styles.turnText}>
-          Turn: <span className={isXTurn ? styles.highlightX : styles.highlightO}>{currentName} ({currentPlayer})</span>
+          Turn: <span className={styles.turnPlayer}>{isXTurn ? `${playerXName} (X)` : `${playerOName} (O)`}</span>
         </div>
-
-        <div className={styles.activeBoardText}>
-          {activeBoard === -1 ? (
-            <span className={styles.wildcard}>✨ WILDCARD: Play in ANY available small board!</span>
+        
+        <div className={styles.boardPrompt}>
+          {isWildcard ? (
+            <span className={styles.wildcard}>Wildcard: Play in any open board</span>
           ) : (
-            <span>📍 Target: Must play in <strong>Board {activeBoard + 1}</strong></span>
+            <span className={styles.targetBoard}>Target: Board {activeBoard + 1}</span>
           )}
         </div>
-
-        {lastMove && (
-          <div className={styles.lastMoveText}>
-            Last Move: {lastMove.player} played Board {lastMove.boardIndex + 1}, Cell {lastMove.cellIndex + 1}
-          </div>
-        )}
       </div>
     </div>
   );

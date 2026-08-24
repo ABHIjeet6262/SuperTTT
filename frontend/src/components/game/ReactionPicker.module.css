@@ -2,40 +2,44 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  background: var(--bg-card);
+  gap: 10px;
+  background: var(--bg-surface);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-md);
-  padding: 8px 16px;
-  margin: 12px 0 16px 0;
+  padding: 6px 14px;
+  margin: 0 0 14px 0;
   position: relative;
   z-index: 30;
-  box-shadow: var(--box-shadow-card);
+  box-shadow: var(--shadow-sm);
+  width: 100%;
+  max-width: 500px;
 }
 
 .label {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-secondary);
 }
 
 .buttonsGroup {
   display: flex;
-  gap: 8px;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .reactionBtn {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--bg-primary);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-sm);
-  padding: 6px 14px;
-  font-size: 1.1rem;
-  transition: all 0.2s ease;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all var(--transition);
   color: var(--text-primary);
 }
 
 .reactionBtn:hover {
-  background: rgba(255, 255, 255, 0.18);
-  transform: translateY(-2px);
-  border-color: var(--accent-cyan);
+  background: var(--bg-surface-hover);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
 }

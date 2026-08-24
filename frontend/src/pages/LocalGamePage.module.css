@@ -1,85 +1,5 @@
-.setupContainer {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - var(--navbar-height) - 70px);
-  padding: 20px;
-}
-
-.setupCard {
-  background: var(--bg-card);
-  backdrop-filter: var(--glass-backdrop);
-  border: 1px solid var(--bg-card-border);
-  border-radius: var(--border-radius-lg);
-  padding: 40px;
-  max-width: 440px;
-  width: 100%;
-  text-align: center;
-  box-shadow: var(--box-shadow-card);
-}
-
-.icon {
-  font-size: 2.8rem;
-  margin-bottom: 12px;
-}
-
-.setupCard h2 {
-  font-size: 1.8rem;
-  font-weight: 800;
-  margin-bottom: 8px;
-}
-
-.setupCard p {
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  margin-bottom: 28px;
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  text-align: left;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.field label {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: var(--text-secondary);
-}
-
-.field input {
-  background: rgba(0, 0, 0, 0.3);
-  border: 1px solid var(--bg-card-border);
-  border-radius: var(--border-radius-sm);
-  padding: 12px 16px;
-  color: var(--text-primary);
-  font-size: 1rem;
-  outline: none;
-}
-
-.field input:focus {
-  border-color: var(--accent-cyan);
-}
-
-.startBtn {
-  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-  color: #0b0e14;
-  font-weight: 800;
-  font-size: 1rem;
-  padding: 14px;
-  border-radius: var(--border-radius-sm);
-  margin-top: 8px;
-}
-
 .gamePageContainer {
-  padding: 24px 20px 80px 20px;
+  padding: 30px 20px 70px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -95,40 +15,76 @@
   margin-bottom: 16px;
 }
 
-.titleBadge {
-  background: rgba(0, 242, 254, 0.1);
-  border: 1px solid rgba(0, 242, 254, 0.3);
-  color: var(--accent-cyan);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 0.85rem;
+.modeTag {
+  font-size: 0.8rem;
   font-weight: 700;
+  color: var(--accent-primary);
+  background: var(--accent-primary-subtle);
+  border: 1px solid var(--accent-border);
+  padding: 3px 10px;
+  border-radius: var(--border-radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.resetBtn {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-primary);
+.headerActions {
+  display: flex;
+  gap: 8px;
+}
+
+.secondaryBtn {
+  background: var(--bg-surface);
   border: 1px solid var(--bg-card-border);
-  padding: 6px 14px;
+  color: var(--text-primary);
+  padding: 6px 12px;
   border-radius: var(--border-radius-sm);
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
+  transition: all var(--transition);
 }
 
-.errorBanner {
-  background: rgba(255, 82, 82, 0.15);
-  border: 1px solid var(--status-error);
-  color: var(--status-error);
-  padding: 8px 16px;
+.secondaryBtn:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--bg-card-border-hover);
+}
+
+.nameEditCard {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  gap: 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--bg-card-border);
+  border-radius: var(--border-radius-md);
+  padding: 14px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.nameField {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nameField label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.nameField input {
+  background: var(--bg-primary);
+  border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-sm);
-  font-size: 0.85rem;
-  margin-bottom: 12px;
-  animation: shake 0.2s ease;
+  padding: 6px 10px;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  outline: none;
+  transition: border-color var(--transition);
 }
 
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  75% { transform: translateX(4px); }
-  100% { transform: translateX(0); }
+.nameField input:focus {
+  border-color: var(--accent-primary);
 }

@@ -64,36 +64,34 @@ const LobbyPage = () => {
     <div className={`container ${styles.lobbyContainer}`}>
       <header className={styles.lobbyHeader}>
         <h1>Online Game Lobby</h1>
-        <p>Welcome, <span className={styles.playerName}>{playerName}</span>! Choose how you want to play online.</p>
+        <p>Welcome, <span className={styles.playerName}>{playerName}</span>. Choose how you want to play.</p>
       </header>
 
-      {error && <div className={styles.errorMsg} style={{ marginBottom: '24px' }}>{error}</div>}
+      {error && <div className={styles.errorMsg}>{error}</div>}
 
       <div className={styles.lobbyGrid}>
         {/* Create Room Card */}
         <div className={styles.lobbyCard}>
           <div className={styles.cardHeader}>
-            <div className={styles.icon}>🎮</div>
             <h2>Create Private Room</h2>
           </div>
-          <p>Generate a unique room code and share it with your friend to play online.</p>
+          <p>Generate a unique room code and share it with an opponent to start a game.</p>
           <button onClick={handleCreateRoom} className={styles.createBtn} disabled={loading}>
-            {loading ? 'Creating...' : '+ Create New Room'}
+            {loading ? 'Creating...' : 'Create New Room'}
           </button>
         </div>
 
         {/* Join Room Card */}
         <div className={styles.lobbyCard}>
           <div className={styles.cardHeader}>
-            <div className={styles.icon}>🔑</div>
             <h2>Join Existing Game</h2>
           </div>
-          <p>Enter the 6-character room code shared by your friend to join their game.</p>
+          <p>Enter the 6-character code provided by your opponent to enter their room.</p>
           
           <form onSubmit={handleJoinRoom} className={styles.joinForm}>
             <input
               type="text"
-              placeholder="e.g. X7K9P2"
+              placeholder="ROOM CODE"
               maxLength={6}
               value={roomCodeInput}
               onChange={(e) => {

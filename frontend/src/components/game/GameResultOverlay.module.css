@@ -1,92 +1,100 @@
-.overlay {
+.overlayBackdrop {
   position: fixed;
-  inset: 0;
-  background: rgba(11, 14, 20, 0.85);
-  backdrop-filter: blur(12px);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
   padding: 20px;
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.2s ease-out forwards;
 }
 
-.modalCard {
-  background: var(--bg-card);
+.resultCard {
+  background: var(--bg-surface);
   border: 1px solid var(--bg-card-border);
   border-radius: var(--border-radius-lg);
-  padding: 40px;
-  text-align: center;
+  padding: 36px 30px;
   max-width: 440px;
   width: 100%;
-  box-shadow: var(--box-shadow-card);
-  animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  text-align: center;
+  box-shadow: var(--shadow-lg);
 }
 
-.icon {
-  font-size: 3.5rem;
-  margin-bottom: 16px;
+.statusBadge {
+  display: inline-block;
+  background: var(--accent-primary-subtle);
+  color: var(--accent-primary);
+  border: 1px solid var(--accent-border);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: var(--border-radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
 }
 
 .title {
-  font-size: 2.2rem;
-  font-weight: 900;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
-.xText {
-  color: var(--player-x-color);
-  text-shadow: 0 0 10px var(--player-x-glow);
-}
-
-.oText {
-  color: var(--player-o-color);
-  text-shadow: 0 0 10px var(--player-o-glow);
-}
-
-.message {
+.subtitle {
   color: var(--text-secondary);
-  font-size: 1.05rem;
-  margin-bottom: 32px;
+  font-size: 0.92rem;
+  margin-bottom: 28px;
+  line-height: 1.5;
 }
 
 .actionButtons {
   display: flex;
-  flex-direction: column;
   gap: 12px;
+  justify-content: center;
 }
 
 .rematchBtn {
-  background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
-  color: #0b0e14;
-  font-weight: 800;
-  font-size: 1rem;
-  padding: 14px;
+  background: var(--accent-primary);
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.92rem;
+  padding: 10px 20px;
   border-radius: var(--border-radius-sm);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background var(--transition);
+  flex: 1;
 }
 
 .rematchBtn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+  background: var(--accent-primary-hover);
 }
 
-.homeBtn {
-  background: rgba(255, 255, 255, 0.08);
+.lobbyBtn {
+  background: var(--bg-primary);
+  border: 1px solid var(--bg-card-border);
   color: var(--text-primary);
   font-weight: 600;
-  font-size: 0.95rem;
-  padding: 12px;
+  font-size: 0.92rem;
+  padding: 10px 20px;
   border-radius: var(--border-radius-sm);
-  border: 1px solid var(--bg-card-border);
+  transition: all var(--transition);
+  flex: 1;
+}
+
+.lobbyBtn:hover {
+  background: var(--bg-surface-hover);
+  border-color: var(--bg-card-border-hover);
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes slideUp {
-  from { transform: translateY(30px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
