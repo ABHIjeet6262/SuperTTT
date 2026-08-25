@@ -20,17 +20,25 @@
 .logoGroup {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   text-decoration: none;
 }
 
-.logoIcon {
-  font-size: 1.5rem;
-  filter: drop-shadow(0 0 8px var(--accent-cyan));
+.logoImg {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+  transition: transform var(--transition-fast);
+}
+
+.logoGroup:hover .logoImg {
+  transform: scale(1.05);
 }
 
 .logoText {
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 800;
   letter-spacing: -0.5px;
   color: var(--text-primary);

@@ -53,7 +53,7 @@ const Navbar = () => {
     <header className={styles.header}>
       <div className={`container ${styles.navContainer}`}>
         <Link to="/" className={styles.logoGroup}>
-          <span className={styles.logoIcon}>⚡</span>
+          <img src="/logo.png" alt="SuperTTT Logo" className={styles.logoImg} />
           <span className={styles.logoText}>Super<span className={styles.highlight}>TTT</span></span>
         </Link>
 
@@ -69,7 +69,7 @@ const Navbar = () => {
 
         <div className={styles.authButtons}>
           <button 
-            onClick={toggleAudio}
+            onClick={toggleAudio} 
             className={styles.themeToggleBtn}
             title={isMuted ? 'Unmute Game Sounds' : 'Mute Game Sounds'}
           >
