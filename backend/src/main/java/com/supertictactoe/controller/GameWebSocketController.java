@@ -59,6 +59,11 @@ public class GameWebSocketController {
         Game game = gameRepository.findByRoomCode(roomCode)
                 .orElseThrow(() -> new InvalidMoveException("Game not found for room: " + roomCode));
 
+        String senderId = message.getPlayerId();
+        if (!senderId.equals(game.getPlayerXId()) && !senderId.equals(game.getPlayerOId())) {
+            throw new InvalidMoveException("Player is not a participant in this game.");
+        }
+
         List<List<String>> boards = activeGameBoards.computeIfAbsent(roomCode, k -> gameEngineService.createEmptyBoards());
         List<String> boardStatuses = activeBoardStatuses.computeIfAbsent(roomCode, k -> gameEngineService.createInitialBoardStatuses());
 
@@ -66,7 +71,7 @@ public class GameWebSocketController {
         int cellIndex = message.getCellIndex();
 
         // 1. Authoritative Server Validation
-        gameEngineService.validateMove(game, boardIndex, cellIndex, message.getPlayerId(), boards, boardStatuses);
+        gameEngineService.validateMove(game, boardIndex, cellIndex, senderId, boards, boardStatuses);
 
         // 2. Apply Move
         String symbol = game.getCurrentPlayer();
@@ -101,7 +106,7 @@ public class GameWebSocketController {
             eventType = "DRAW".equals(overallWinner) ? WSEventType.GAME_DRAW : WSEventType.GAME_WON;
         }
 
-        WSMessage broadcast = new WSMessage(eventType, roomCode, message.getPlayerId(), message.getPlayerName());
+        WSMessage broadcast = new WSMessage(eventType, roomCode, senderId, message.getPlayerName());
         broadcast.setBoardIndex(boardIndex);
         broadcast.setCellIndex(cellIndex);
         broadcast.setGameState(buildGameStateDto(game, boards, boardStatuses));
@@ -111,7 +116,15 @@ public class GameWebSocketController {
 
     @MessageMapping("/game/{roomCode}/reaction")
     public void handleReaction(@DestinationVariable String roomCode, @Payload WSMessage message) {
-        WSMessage broadcast = new WSMessage(WSEventType.REACTION_SENT, roomCode, message.getPlayerId(), message.getPlayerName());
+        Game game = gameRepository.findByRoomCode(roomCode).orElse(null);
+        if (game == null) return;
+
+        String senderId = message.getPlayerId();
+        if (!senderId.equals(game.getPlayerXId()) && !senderId.equals(game.getPlayerOId())) {
+            return; // Only room participants can broadcast reactions
+        }
+
+        WSMessage broadcast = new WSMessage(WSEventType.REACTION_SENT, roomCode, senderId, message.getPlayerName());
         broadcast.setReaction(message.getReaction());
         
         messagingTemplate.convertAndSend("/topic/room/" + roomCode, broadcast);
@@ -120,40 +133,45 @@ public class GameWebSocketController {
     @MessageMapping("/game/{roomCode}/rematch")
     @Transactional
     public void handleRematch(@DestinationVariable String roomCode, @Payload WSMessage message) {
+        Game game = gameRepository.findByRoomCode(roomCode).orElse(null);
+        if (game == null) return;
+
+        String senderId = message.getPlayerId();
+        if (!senderId.equals(game.getPlayerXId()) && !senderId.equals(game.getPlayerOId())) {
+            return; // Strictly restrict rematch requests/acceptances to valid room players
+        }
+
         String existingRequestPlayer = rematchRequests.get(roomCode);
 
         if (existingRequestPlayer == null) {
             // First player requested rematch
-            rematchRequests.put(roomCode, message.getPlayerId());
-            WSMessage broadcast = new WSMessage(WSEventType.REMATCH_REQUESTED, roomCode, message.getPlayerId(), message.getPlayerName());
+            rematchRequests.put(roomCode, senderId);
+            WSMessage broadcast = new WSMessage(WSEventType.REMATCH_REQUESTED, roomCode, senderId, message.getPlayerName());
             messagingTemplate.convertAndSend("/topic/room/" + roomCode, broadcast);
-        } else if (!existingRequestPlayer.equals(message.getPlayerId())) {
-            // Both players accepted rematch! Reset state & Swap X/O symbols
+        } else if (!existingRequestPlayer.equals(senderId)) {
+            // Both room players accepted rematch! Reset state & Swap X/O symbols
             rematchRequests.remove(roomCode);
 
-            Game game = gameRepository.findByRoomCode(roomCode).orElse(null);
-            if (game != null) {
-                // Swap X and O symbols as specified in requirement #25
-                String oldXId = game.getPlayerXId();
-                String oldXName = game.getPlayerXName();
+            // Swap X and O symbols as specified in requirement #25
+            String oldXId = game.getPlayerXId();
+            String oldXName = game.getPlayerXName();
 
-                game.setPlayerXId(game.getPlayerOId());
-                game.setPlayerXName(game.getPlayerOName());
-                game.setPlayerOId(oldXId);
-                game.setPlayerOName(oldXName);
+            game.setPlayerXId(game.getPlayerOId());
+            game.setPlayerXName(game.getPlayerOName());
+            game.setPlayerOId(oldXId);
+            game.setPlayerOName(oldXName);
 
-                game.setCurrentPlayer("X");
-                game.setActiveBoard(-1);
-                game.setWinner(null);
-                game.setStatus("PLAYING");
+            game.setCurrentPlayer("X");
+            game.setActiveBoard(-1);
+            game.setWinner(null);
+            game.setStatus("PLAYING");
 
-                gameRepository.save(game);
-            }
+            gameRepository.save(game);
 
             activeGameBoards.put(roomCode, gameEngineService.createEmptyBoards());
             activeBoardStatuses.put(roomCode, gameEngineService.createInitialBoardStatuses());
 
-            WSMessage broadcast = new WSMessage(WSEventType.GAME_RESTARTED, roomCode, message.getPlayerId(), message.getPlayerName());
+            WSMessage broadcast = new WSMessage(WSEventType.GAME_RESTARTED, roomCode, senderId, message.getPlayerName());
             broadcast.setGameState(buildGameStateDto(game, activeGameBoards.get(roomCode), activeBoardStatuses.get(roomCode)));
             
             messagingTemplate.convertAndSend("/topic/room/" + roomCode, broadcast);

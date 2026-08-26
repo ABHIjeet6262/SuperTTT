@@ -27,7 +27,7 @@ public class UserService {
 
     public Map<String, Object> getUserProfile(String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         UserStat stat = userStatRepository.findByUserId(user.getId())
                 .orElseGet(() -> new UserStat(user));
@@ -46,8 +46,7 @@ public class UserService {
     }
 
     public List<Game> getUserGameHistory(String username) {
-        return gameRepository.findAll().stream()
-                .filter(game -> ("user_" + username).equals(game.getPlayerXId()) || ("user_" + username).equals(game.getPlayerOId()))
-                .toList();
+        String userId = "user_" + username;
+        return gameRepository.findByPlayerXIdOrPlayerOIdOrderByCreatedAtDesc(userId, userId);
     }
 }

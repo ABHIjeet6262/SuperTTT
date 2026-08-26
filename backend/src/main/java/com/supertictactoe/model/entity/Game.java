@@ -32,7 +32,7 @@ public class Game {
     @Column(name = "active_board")
     private int activeBoard = -1;
 
-    @Column(length = 1)
+    @Column(length = 10)
     private String winner;
 
     @Column(nullable = false, length = 20)

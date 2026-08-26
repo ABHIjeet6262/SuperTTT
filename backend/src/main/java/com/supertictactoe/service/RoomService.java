@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Random;
 
 @Service
 public class RoomService {
@@ -25,14 +25,14 @@ public class RoomService {
     private GameRepository gameRepository;
 
     private static final String CHARACTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    private static final SecureRandom secureRandom = new SecureRandom();
 
     public String generateUniqueRoomCode() {
-        Random random = new Random();
-        StringBuilder code = new StringBuilder();
+        StringBuilder code = new StringBuilder(6);
         do {
             code.setLength(0);
             for (int i = 0; i < 6; i++) {
-                code.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+                code.append(CHARACTERS.charAt(secureRandom.nextInt(CHARACTERS.length())));
             }
         } while (roomRepository.findByRoomCode(code.toString()).isPresent());
 
