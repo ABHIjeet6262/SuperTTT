@@ -1,6 +1,9 @@
 package com.supertictactoe.config;
 
+import com.supertictactoe.security.WebSocketAuthInterceptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.*;
 
@@ -8,19 +11,36 @@ import org.springframework.web.socket.config.annotation.*;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
+    @Autowired
+    private WebSocketAuthInterceptor webSocketAuthInterceptor;
+
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        // Enable simple memory-based message broker for broadcasting to topics
         config.enableSimpleBroker("/topic");
-        // Prefix for messages bound for methods annotated with @MessageMapping
         config.setApplicationDestinationPrefixes("/app");
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // Register /ws/game endpoint with SockJS fallback & CORS support
+        // Restrict to known origins only — no wildcard
         registry.addEndpoint("/ws/game")
-                .setAllowedOriginPatterns("*")
+                .setAllowedOriginPatterns(
+                        "http://localhost:*",
+                        "http://127.0.0.1:*",
+                        "https://*.vercel.app",
+                        "https://*.railway.app",
+                        "https://*.onrender.com"
+                )
                 .withSockJS();
+    }
+
+    /**
+     * Register the JWT channel interceptor on the inbound STOMP channel.
+     * This fires on every STOMP CONNECT frame and binds the server-verified
+     * Principal to the WebSocket session before any @MessageMapping handler runs.
+     */
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(webSocketAuthInterceptor);
     }
 }

@@ -1,7 +1,9 @@
 package com.supertictactoe.config;
 
 import com.supertictactoe.security.JwtAuthenticationFilter;
+import com.supertictactoe.security.RateLimitingFilter;
 import com.supertictactoe.security.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +31,11 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private RateLimitingFilter rateLimitingFilter;
 
     public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
@@ -54,6 +62,19 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
+    }
+
+    /**
+     * Register the rate limiting filter to fire before the Spring Security chain
+     * on auth endpoints only.
+     */
+    @Bean
+    public FilterRegistrationBean<RateLimitingFilter> rateLimitFilterRegistration() {
+        FilterRegistrationBean<RateLimitingFilter> registration = new FilterRegistrationBean<>();
+        registration.setFilter(rateLimitingFilter);
+        registration.addUrlPatterns("/api/auth/login", "/api/auth/register");
+        registration.setOrder(1);
+        return registration;
     }
 
     @Bean

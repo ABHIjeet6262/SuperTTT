@@ -10,6 +10,7 @@ import com.supertictactoe.repository.UserStatRepository;
 import com.supertictactoe.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -44,7 +45,6 @@ public class AuthService {
             throw new RuntimeException("Email address is already in use!");
         }
 
-        // Create new user with hashed password
         User user = new User(
                 registerRequest.getUsername(),
                 registerRequest.getEmail(),
@@ -53,11 +53,9 @@ public class AuthService {
 
         User savedUser = userRepository.save(user);
 
-        // Initialize user statistics
         UserStat userStat = new UserStat(savedUser);
         userStatRepository.save(userStat);
 
-        // Auto authenticate after registration
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         registerRequest.getUsername(),
@@ -71,17 +69,27 @@ public class AuthService {
     }
 
     public AuthResponse loginUser(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsernameOrEmail(),
-                        loginRequest.getPassword()
-                )
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsernameOrEmail(),
+                            loginRequest.getPassword()
+                    )
+            );
 
-        String token = tokenProvider.generateToken(authentication);
-        User user = userRepository.findByUsernameOrEmail(loginRequest.getUsernameOrEmail(), loginRequest.getUsernameOrEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+            String token = tokenProvider.generateToken(authentication);
 
-        return new AuthResponse(token, user.getUsername(), user.getEmail(), "Login successful!");
+            // Only look up user AFTER authentication succeeds — no enumeration risk here
+            User user = userRepository.findByUsernameOrEmail(
+                            loginRequest.getUsernameOrEmail(),
+                            loginRequest.getUsernameOrEmail())
+                    .orElseThrow(() -> new RuntimeException("Authentication error"));
+
+            return new AuthResponse(token, user.getUsername(), user.getEmail(), "Login successful!");
+
+        } catch (BadCredentialsException ex) {
+            // Return a generic error — never reveal whether the username exists or not
+            throw new RuntimeException("Invalid username or password");
+        }
     }
 }
