@@ -19,9 +19,19 @@ export const authService = {
     return response.data;
   },
 
-  logout: () => {
-    localStorage.removeItem('superttt_token');
-    localStorage.removeItem('superttt_user');
+  /**
+   * L3 Fix: Call server-side logout to revoke the JWT token in the blacklist,
+   * then clear local storage. This ensures stolen tokens cannot be reused.
+   */
+  logout: async () => {
+    try {
+      await api.post('/auth/logout');
+    } catch (e) {
+      // Proceed with local logout even if server call fails
+    } finally {
+      localStorage.removeItem('superttt_token');
+      localStorage.removeItem('superttt_user');
+    }
   },
 
   getCurrentUser: () => {

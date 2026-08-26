@@ -22,13 +22,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private TokenBlacklist tokenBlacklist;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
             String jwt = getJwtFromRequest(request);
 
-            if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+            if (StringUtils.hasText(jwt)
+                    && tokenProvider.validateToken(jwt)
+                    && !tokenBlacklist.isRevoked(jwt)) {   // L3: reject blacklisted (logged-out) tokens
+
                 String username = tokenProvider.getUsernameFromJWT(jwt);
 
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
