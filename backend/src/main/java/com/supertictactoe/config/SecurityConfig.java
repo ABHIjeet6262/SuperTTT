@@ -3,7 +3,7 @@ package com.supertictactoe.config;
 import com.supertictactoe.security.JwtAuthenticationFilter;
 import com.supertictactoe.security.RateLimitingFilter;
 import com.supertictactoe.security.UserDetailsServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,8 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 
 import java.util.Arrays;
 import java.util.List;
@@ -31,14 +29,12 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsServiceImpl userDetailsService;
+    private final RateLimitingFilter rateLimitingFilter;
 
-    @Autowired
-    private RateLimitingFilter rateLimitingFilter;
-
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, RateLimitingFilter rateLimitingFilter) {
         this.userDetailsService = userDetailsService;
+        this.rateLimitingFilter = rateLimitingFilter;
     }
 
     @Bean
@@ -65,8 +61,8 @@ public class SecurityConfig {
     }
 
     /**
-     * Register the rate limiting filter to fire before the Spring Security chain
-     * on auth endpoints only.
+     * Register the rate limiting filter before the Spring Security chain,
+     * scoped to auth endpoints only (fixes M1 — brute force / enumeration).
      */
     @Bean
     public FilterRegistrationBean<RateLimitingFilter> rateLimitFilterRegistration() {
@@ -98,6 +94,11 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * CORS: explicit origin allowlist only — wildcard "*" removed (fixes H3).
+     * setAllowCredentials(true) is safe when combined with a pattern list that
+     * never contains a literal "*".
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

@@ -37,12 +37,10 @@ public class AuthService {
 
     @Transactional
     public AuthResponse registerUser(RegisterRequest registerRequest) {
-        if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            throw new RuntimeException("Username is already taken!");
-        }
-
-        if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            throw new RuntimeException("Email address is already in use!");
+        // Use a generic message for both checks — prevents username/email enumeration (fixes M1)
+        if (userRepository.existsByUsername(registerRequest.getUsername())
+                || userRepository.existsByEmail(registerRequest.getEmail())) {
+            throw new RuntimeException("Registration failed. Please check your details and try again.");
         }
 
         User user = new User(
