@@ -30,11 +30,9 @@ import java.util.List;
 public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
-    private final RateLimitingFilter rateLimitingFilter;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, RateLimitingFilter rateLimitingFilter) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService) {
         this.userDetailsService = userDetailsService;
-        this.rateLimitingFilter = rateLimitingFilter;
     }
 
     @Bean
@@ -67,7 +65,7 @@ public class SecurityConfig {
     @Bean
     public FilterRegistrationBean<RateLimitingFilter> rateLimitFilterRegistration() {
         FilterRegistrationBean<RateLimitingFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(rateLimitingFilter);
+        registration.setFilter(new RateLimitingFilter());
         registration.addUrlPatterns("/api/auth/login", "/api/auth/register");
         registration.setOrder(1);
         return registration;

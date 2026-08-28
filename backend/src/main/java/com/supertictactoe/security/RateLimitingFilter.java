@@ -3,12 +3,10 @@ package com.supertictactoe.security;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * In-memory IP-based rate limiter for auth endpoints.
@@ -20,8 +18,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Responds with HTTP 429 Too Many Requests when the limit is exceeded.
  * Uses a sliding window counter stored in memory — suitable for a single-instance
  * deployment. For multi-instance deployments, replace with Redis-backed rate limiting.
+ *
+ * NOTE: No @Component — registered manually via FilterRegistrationBean in SecurityConfig
+ * so it only applies to /api/auth/login and /api/auth/register, not all endpoints.
  */
-@Component
 public class RateLimitingFilter implements Filter {
 
     private static final long WINDOW_MS = 60_000L;  // 1 minute
