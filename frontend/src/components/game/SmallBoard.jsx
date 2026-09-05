@@ -7,6 +7,7 @@ const SmallBoard = ({
   cells, 
   status, 
   isActive, 
+  currentPlayer,
   onCellClick, 
   lastMove 
 }) => {
@@ -14,8 +15,13 @@ const SmallBoard = ({
   const isDraw = status === 'DRAW';
   const winnerSymbol = status === 'WON_X' ? 'X' : status === 'WON_O' ? 'O' : null;
 
+  // Choose dynamic active class based on currentPlayer ('X' = Blue/Cyan, 'O' = Pink/Red)
+  const activeClass = isActive 
+    ? (currentPlayer === 'O' ? styles.activeBoardO : styles.activeBoardX)
+    : '';
+
   return (
-    <div className={`${styles.smallBoard} ${isActive ? styles.activeBoard : ''} ${isWon || isDraw ? styles.completedBoard : ''}`}>
+    <div className={`${styles.smallBoard} ${activeClass} ${isWon || isDraw ? styles.completedBoard : ''}`}>
       <div className={styles.boardHeader}>
         <span>Board {boardIndex + 1}</span>
       </div>
@@ -25,6 +31,7 @@ const SmallBoard = ({
           <Cell
             key={cellIndex}
             value={cellValue}
+            currentPlayer={currentPlayer}
             onClick={() => onCellClick(boardIndex, cellIndex)}
             disabled={!isActive || isWon || isDraw}
             isLastMove={lastMove && lastMove.boardIndex === boardIndex && lastMove.cellIndex === cellIndex}

@@ -3,7 +3,7 @@ import SmallBoard from './SmallBoard';
 import styles from './MainBoard.module.css';
 
 const MainBoard = ({ gameState, onCellClick }) => {
-  const { boards, boardStatuses, activeBoard, lastMove } = gameState;
+  const { boards, boardStatuses, activeBoard, lastMove, currentPlayer } = gameState;
 
   return (
     <div className={styles.mainBoard}>
@@ -17,6 +17,7 @@ const MainBoard = ({ gameState, onCellClick }) => {
             cells={cells}
             status={boardStatuses[boardIndex]}
             isActive={isActive}
+            currentPlayer={currentPlayer}
             onCellClick={onCellClick}
             lastMove={lastMove}
           />

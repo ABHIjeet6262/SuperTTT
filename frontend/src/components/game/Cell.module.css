@@ -12,9 +12,17 @@
   user-select: none;
 }
 
-.cell:not(:disabled):hover {
-  background: var(--bg-card-hover);
-  border-color: var(--accent-blue);
+.hoverX:not(:disabled):hover {
+  background: rgba(0, 229, 255, 0.08);
+  border-color: var(--player-x-color);
+  box-shadow: 0 0 8px var(--player-x-glow);
+  cursor: pointer;
+}
+
+.hoverO:not(:disabled):hover {
+  background: rgba(255, 42, 109, 0.08);
+  border-color: var(--player-o-color);
+  box-shadow: 0 0 8px var(--player-o-glow);
   cursor: pointer;
 }
 
